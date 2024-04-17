@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebSocket Chat Application</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, button, textarea { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; font-size: 16px; }
+    textarea { height: 300px; }
+  </style>
+</head>
+<body>
+<h1>WebSocket Chat</h1>
+<input type="number" id="userId" placeholder="Your User ID">
+<input type="number" id="otherUserId" placeholder="Other User ID">
+<button id="connect">Connect</button>
+
+<h2>Messages</h2>
+<textarea id="messageLog" disabled></textarea>
+
+<input type="text" id="messageInput" placeholder="Type your message here...">
+<button id="sendMessage">Send Message</button>
+
+<script src="index.js"></script>
+</body>
+</html>
