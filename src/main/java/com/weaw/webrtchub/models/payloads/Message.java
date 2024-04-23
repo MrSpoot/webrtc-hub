@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class Message {
 
     private long recipientId;
-    private RecipientType recipientType;
     private String message;
     private long senderId;
     private long createdAt = System.currentTimeMillis();
