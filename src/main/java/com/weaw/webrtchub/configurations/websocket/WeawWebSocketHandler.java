@@ -3,8 +3,11 @@ package com.weaw.webrtchub.configurations.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weaw.webrtchub.models.WebSocketMessage;
 import com.weaw.webrtchub.models.payloads.Message;
+import com.weaw.webrtchub.services.CanalService;
 import com.weaw.webrtchub.services.MessageService;
 import com.weaw.webrtchub.services.SessionService;
+import com.weaw.webrtchub.services.TokenService;
+import com.weaw.webrtchub.utils.AuthenticationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,26 +28,32 @@ public class WeawWebSocketHandler extends TextWebSocketHandler {
 
     private final ObjectMapper objectMapper;
     private final SessionService sessionService;
-    private final MessageService messageService;
+    private final CanalService canalService;
+    private final TokenService tokenService;
 
     @Autowired
-    public WeawWebSocketHandler(ObjectMapper objectMapper, SessionService sessionService,MessageService messageService) {
+    public WeawWebSocketHandler(ObjectMapper objectMapper, SessionService sessionService,CanalService canalService,TokenService tokenService) {
         this.objectMapper = objectMapper;
         this.sessionService = sessionService;
-        this.messageService = messageService;
+        this.canalService = canalService;
+        this.tokenService = tokenService;
     }
 
     @Override
-    public void afterConnectionEstablished( WebSocketSession session) throws IOException {
+    public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         try {
             URI uri = session.getUri();
             assert uri != null;
-            Long userId = Long.parseLong(parseQuery(uri.getQuery()).getOrDefault("userId",null));
-            sessionService.addUserSession(userId, session);
-            logger.info("Connection established [Session] [{}] [User] [{}]",session.getId(),userId);
-
+            String token = parseQuery(uri.getQuery()).getOrDefault("token",null);
+            if(tokenService.validateToken(token)){
+                Long userId = AuthenticationUtils.extractUserId(token);
+                sessionService.addUserSession(userId, session);
+                logger.info("Connection established [Session] [{}] [User] [{}]",session.getId(),userId);
+            }else{
+                session.close(CloseStatus.BAD_DATA.withReason("Invalid token"));
+            }
         }catch (Exception e) {
-            session.close(CloseStatus.BAD_DATA.withReason("No user id provided"));
+            session.close(CloseStatus.BAD_DATA.withReason("No token provided"));
         }
     }
 
@@ -57,7 +66,7 @@ public class WeawWebSocketHandler extends TextWebSocketHandler {
         Object messagePayload = webSocketMessage1.getPayload();
 
         if(messagePayload instanceof Message message){
-            messageService.processMessage(message);
+            canalService.processMessage(message);
         }
     }
 
@@ -65,9 +74,12 @@ public class WeawWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         URI uri = session.getUri();
         assert uri != null;
-        Long userId = Long.parseLong(parseQuery(uri.getQuery()).getOrDefault("userId",null));
-        sessionService.removeUserSession(userId, session);
-        logger.info("Connection closed [Session] [{}] [Status] [{}]",session.getId(),status);
+        String token = parseQuery(uri.getQuery()).getOrDefault("token",null);
+        if(token != null){
+            Long userId = AuthenticationUtils.extractUserId(token);
+            sessionService.removeUserSession(userId, session);
+            logger.info("Connection closed [Session] [{}] [Status] [{}]",session.getId(),status);
+        }
     }
 
     private Map<String, String> parseQuery(String query) {

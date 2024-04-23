@@ -39,15 +39,27 @@ public class AuthenticationUtils {
         }
     }
 
+    public static Long extractUserId(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token).getPayload();
+            return Long.parseLong(claims.get("userId").toString());
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-    public static String generateToken(String subject){
+
+    public static String generateToken(String userId){
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         long expMillis = nowMillis + 3600000; // Le token expire dans une heure
         Date exp = new Date(expMillis);
 
         return Jwts.builder()
-                .subject(subject)
+                .claim("userId", userId)
                 .issuedAt(now)
                 .expiration(exp)
                 .signWith(SECRET_KEY)
