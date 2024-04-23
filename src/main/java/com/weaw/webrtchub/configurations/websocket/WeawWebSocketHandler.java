@@ -32,7 +32,7 @@ public class WeawWebSocketHandler extends TextWebSocketHandler {
     private final TokenService tokenService;
 
     @Autowired
-    public WeawWebSocketHandler(ObjectMapper objectMapper, SessionService sessionService,CanalService canalService,TokenService tokenService) {
+    public WeawWebSocketHandler(ObjectMapper objectMapper, SessionService sessionService, CanalService canalService, TokenService tokenService) {
         this.objectMapper = objectMapper;
         this.sessionService = sessionService;
         this.canalService = canalService;
@@ -41,45 +41,46 @@ public class WeawWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
-        try {
-            URI uri = session.getUri();
-            assert uri != null;
-            String token = parseQuery(uri.getQuery()).getOrDefault("token",null);
-            if(tokenService.validateToken(token)){
-                Long userId = AuthenticationUtils.extractUserId(token);
-                sessionService.addUserSession(userId, session);
-                logger.info("Connection established [Session] [{}] [User] [{}]",session.getId(),userId);
-            }else{
-                session.close(CloseStatus.BAD_DATA.withReason("Invalid token"));
-            }
-        }catch (Exception e) {
-            session.close(CloseStatus.BAD_DATA.withReason("No token provided"));
-        }
+        Long userId = checkSessionValidityAndExtractUserId(session);
+        sessionService.addUserSession(userId, session);
+        logger.info("Connection established [Session] [{}] [User] [{}]", session.getId(), userId);
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage webSocketMessage) throws Exception {
-
         String payload = webSocketMessage.getPayload();
 
         WebSocketMessage webSocketMessage1 = objectMapper.readValue(payload, WebSocketMessage.class);
         Object messagePayload = webSocketMessage1.getPayload();
 
-        if(messagePayload instanceof Message message){
+        checkSessionValidityAndExtractUserId(session);
+
+        if (messagePayload instanceof Message message) {
             canalService.processMessage(message);
         }
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-        URI uri = session.getUri();
-        assert uri != null;
-        String token = parseQuery(uri.getQuery()).getOrDefault("token",null);
-        if(token != null){
-            Long userId = AuthenticationUtils.extractUserId(token);
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws IOException {
+            Long userId = checkSessionValidityAndExtractUserId(session);
             sessionService.removeUserSession(userId, session);
-            logger.info("Connection closed [Session] [{}] [Status] [{}]",session.getId(),status);
+            logger.info("Connection closed [Session] [{}] [Status] [{}]", session.getId(), status);
+    }
+
+    private Long checkSessionValidityAndExtractUserId(WebSocketSession session) throws IOException {
+        try {
+            URI uri = session.getUri();
+            assert uri != null;
+            String token = parseQuery(uri.getQuery()).getOrDefault("token", null);
+            if (!tokenService.validateToken(token)) {
+                session.close(CloseStatus.BAD_DATA.withReason("Invalid token"));
+            } else {
+                return AuthenticationUtils.extractUserId(token);
+            }
+        } catch (Exception e) {
+            session.close(CloseStatus.BAD_DATA.withReason("No token provided"));
         }
+        return null;
     }
 
     private Map<String, String> parseQuery(String query) {
