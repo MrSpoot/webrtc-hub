@@ -1,16 +1,17 @@
 package com.weaw.webrtchub.configurations.websocket;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weaw.webrtchub.models.WebSocketMessage;
-import com.weaw.webrtchub.models.payloads.Message;
 import com.weaw.webrtchub.services.CanalService;
-import com.weaw.webrtchub.services.MessageService;
 import com.weaw.webrtchub.services.SessionService;
 import com.weaw.webrtchub.services.TokenService;
 import com.weaw.webrtchub.utils.AuthenticationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -19,6 +20,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
@@ -26,17 +28,17 @@ public class WeawWebSocketHandler extends TextWebSocketHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(WeawWebSocketHandler.class);
 
+    private final WebSocketControllerHandler webSocketControllerHandler;
     private final ObjectMapper objectMapper;
     private final SessionService sessionService;
-    private final CanalService canalService;
     private final TokenService tokenService;
 
     @Autowired
-    public WeawWebSocketHandler(ObjectMapper objectMapper, SessionService sessionService, CanalService canalService, TokenService tokenService) {
+    public WeawWebSocketHandler(WebSocketControllerHandler webSocketControllerHandler, ObjectMapper objectMapper, SessionService sessionService, TokenService tokenService) {
         this.objectMapper = objectMapper;
         this.sessionService = sessionService;
-        this.canalService = canalService;
         this.tokenService = tokenService;
+        this.webSocketControllerHandler = webSocketControllerHandler;
     }
 
     @Override
@@ -48,16 +50,17 @@ public class WeawWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage webSocketMessage) throws Exception {
-        String payload = webSocketMessage.getPayload();
+            String payload = webSocketMessage.getPayload();
+        try {
+            WebSocketMessage webSocketMessage1 = objectMapper.readValue(payload, WebSocketMessage.class);
+            checkSessionValidityAndExtractUserId(session);
 
-        WebSocketMessage webSocketMessage1 = objectMapper.readValue(payload, WebSocketMessage.class);
-        Object messagePayload = webSocketMessage1.getPayload();
-
-        checkSessionValidityAndExtractUserId(session);
-
-        if (messagePayload instanceof Message message) {
-            canalService.processMessage(message);
+            this.webSocketControllerHandler.processWebSocketMessage(webSocketMessage1);
+        }catch (Exception e) {
+            logger.error(e.getMessage());
+            session.sendMessage(new TextMessage(parseMessage(e)));
         }
+
     }
 
     @Override
@@ -98,6 +101,14 @@ public class WeawWebSocketHandler extends TextWebSocketHandler {
             }
         }
         return queryParams;
+    }
+
+    private String parseMessage(Exception ex) throws JsonProcessingException {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+        logger.debug(ex.getMessage());
+        return objectMapper.writeValueAsString(body);
     }
 
 }

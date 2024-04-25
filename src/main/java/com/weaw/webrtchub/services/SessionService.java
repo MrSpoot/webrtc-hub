@@ -70,9 +70,9 @@ public class SessionService {
         }
     }
 
-    public void sendMessage(WebSocketSession session, PayloadType type, Message message) {
+    public void sendMessage(WebSocketSession session, String path, Message message) {
         logger.debug("Sending message: {}", message);
-        WebSocketMessage webSocketMessage = new WebSocketMessage(type, message);
+        WebSocketMessage webSocketMessage = new WebSocketMessage(path, message);
         try {
             session.sendMessage(new TextMessage(objectMapper.writeValueAsString(webSocketMessage)));
         }catch (JsonProcessingException jpe) {
@@ -82,9 +82,9 @@ public class SessionService {
         }
     }
 
-    public void sendMessage(List<WebSocketSession> sessions, PayloadType type, Message message) {
+    public void sendMessage(List<WebSocketSession> sessions, String path, Message message) {
         logger.debug("Sending message: {}", message);
-        WebSocketMessage webSocketMessage = new WebSocketMessage(type, message);
+        WebSocketMessage webSocketMessage = new WebSocketMessage(path, message);
         try {
             TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(webSocketMessage));
             sessions.forEach(session -> {

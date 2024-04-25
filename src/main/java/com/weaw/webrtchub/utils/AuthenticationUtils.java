@@ -5,11 +5,13 @@ import io.jsonwebtoken.security.Keys;
 import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Base64;
 import java.util.Date;
 
+@Component
 public class AuthenticationUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationUtils.class);
 
@@ -18,6 +20,8 @@ public class AuthenticationUtils {
     static {
         LOGGER.debug("JWT Secret key {}", SECRET_KEY);
     }
+
+    private AuthenticationUtils() {}
 
     public static String hashPassword(String plainTextPassword) {
         return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());

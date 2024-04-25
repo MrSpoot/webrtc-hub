@@ -31,7 +31,7 @@ public class CanalService {
         Canal canal = findById(message.getRecipientId());
         if(canal != null) {
             List<WebSocketSession> sessions = sessionService.getUserSessions(canal.getUsers());
-            sessionService.sendMessage(sessions, PayloadType.MESSAGE,message);
+            sessionService.sendMessage(sessions, "",message);
             canal.getMessages().add(message);
             messageService.save(message);
             save(canal);
