@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class WebSocketMessage {
 
     private String path;
-    private Object payload;
+    private Map<String,Object> payload;
 
     @Override
     public String toString() {

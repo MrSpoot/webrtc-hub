@@ -12,8 +12,10 @@ import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class WebSocketControllerHandler {
 
@@ -38,7 +40,7 @@ public class WebSocketControllerHandler {
             paths.append(path).append(",");
         }
         paths.deleteCharAt(paths.length() - 1);
-        LOGGER.debug("Websocket path found : {}", paths);
+        LOGGER.info("Websocket path found : {}", paths);
 
     }
 
@@ -101,11 +103,7 @@ public class WebSocketControllerHandler {
             Method method = this.webSocketEndpointMap.get(message.getPath());
             Object bean = this.webSocketClassInstance.get(message.getPath());
             try {
-                if(message.getPayload() == null) {
-                    method.invoke(bean);
-                }else{
-                    method.invoke(bean,message.getPayload());
-                }
+                invoke(method,bean,message.getPayload());
             } catch (IllegalAccessException e) {
                 System.out.println(e);
                 throw new RuntimeException(e);
@@ -113,11 +111,53 @@ public class WebSocketControllerHandler {
                 System.out.println(e);
                 throw new RuntimeException(e);
             }
-
         }else {
 
         }
         return message;
+    }
+
+    private void invoke(Method method, Object bean, Map<String,Object> parameters) throws IllegalAccessException, InvocationTargetException {
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        Parameter[] methodParameters = method.getParameters();
+
+        if (methodParameters.length != parameters.size()) {
+            throw new IllegalArgumentException("Nombre de paramètres incorrect pour la méthode");
+        }
+
+        Object[] args = new Object[methodParameters.length];
+
+        for(int i = 0; i < methodParameters.length; i++) {
+            String name = methodParameters[i].getName();
+            Class<?> expectedType = parameterTypes[i];
+
+            AtomicBoolean findParam = new AtomicBoolean(false);
+            int finalI = i;
+            parameters.forEach((key, value) -> {
+                if(expectedType.isPrimitive()){
+                    if (expectedType == int.class && value instanceof Integer v) {
+                        args[finalI] = v;
+                    }
+                    if (expectedType == long.class && value instanceof Long v) {
+                        args[finalI] = v;
+                    }
+                    if (expectedType == double.class && value instanceof Double v) {
+                        args[finalI] = v;
+                    }
+                }else{
+                    if(expectedType.isAssignableFrom(value.getClass()) && name.equals(key)) {
+                        findParam.set(true);
+                        args[finalI] = value;
+                    }
+                }
+
+
+            });
+            if(!findParam.get()) {
+
+            }
+        }
+        method.invoke(bean, args);
     }
 
 }

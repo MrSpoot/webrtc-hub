@@ -3,15 +3,12 @@ package com.weaw.webrtchub.configurations.websocket;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.weaw.webrtchub.models.WebSocketMessage;
-import com.weaw.webrtchub.services.CanalService;
 import com.weaw.webrtchub.services.SessionService;
 import com.weaw.webrtchub.services.TokenService;
 import com.weaw.webrtchub.utils.AuthenticationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -57,8 +54,9 @@ public class WeawWebSocketHandler extends TextWebSocketHandler {
 
             this.webSocketControllerHandler.processWebSocketMessage(webSocketMessage1);
         }catch (Exception e) {
-            logger.error(e.getMessage());
-            session.sendMessage(new TextMessage(parseMessage(e)));
+            throw e;
+            //logger.error("Error during websocket message processing | Exception : {}",e.toString());
+            //session.sendMessage(new TextMessage(parseMessage(e)));
         }
 
     }

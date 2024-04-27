@@ -71,31 +71,31 @@ public class SessionService {
     }
 
     public void sendMessage(WebSocketSession session, String path, Message message) {
-        logger.debug("Sending message: {}", message);
-        WebSocketMessage webSocketMessage = new WebSocketMessage(path, message);
-        try {
-            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(webSocketMessage)));
-        }catch (JsonProcessingException jpe) {
-            logger.error("Cannot parse message [Exception] [{}]",jpe.getMessage());
-        } catch (IOException ioe) {
-            logger.error("Cannot send message [Exception] [{}]",ioe.getMessage());
-        }
+//        logger.debug("Sending message: {}", message);
+//        WebSocketMessage webSocketMessage = new WebSocketMessage(path, message);
+//        try {
+//            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(webSocketMessage)));
+//        }catch (JsonProcessingException jpe) {
+//            logger.error("Cannot parse message [Exception] [{}]",jpe.getMessage());
+//        } catch (IOException ioe) {
+//            logger.error("Cannot send message [Exception] [{}]",ioe.getMessage());
+//        }
     }
 
     public void sendMessage(List<WebSocketSession> sessions, String path, Message message) {
-        logger.debug("Sending message: {}", message);
-        WebSocketMessage webSocketMessage = new WebSocketMessage(path, message);
-        try {
-            TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(webSocketMessage));
-            sessions.forEach(session -> {
-                try {
-                    session.sendMessage(textMessage);
-                } catch (IOException e) {
-                    logger.error("Cannot send message [Exception] [{}]",e.getMessage());
-                }
-            });
-        }catch (JsonProcessingException jpe) {
-            logger.error("Cannot parse message [Exception] [{}]",jpe.getMessage());
-        }
+//        logger.debug("Sending message: {}", message);
+//        WebSocketMessage webSocketMessage = new WebSocketMessage(path, message);
+//        try {
+//            TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(webSocketMessage));
+//            sessions.forEach(session -> {
+//                try {
+//                    session.sendMessage(textMessage);
+//                } catch (IOException e) {
+//                    logger.error("Cannot send message [Exception] [{}]",e.getMessage());
+//                }
+//            });
+//        }catch (JsonProcessingException jpe) {
+//            logger.error("Cannot parse message [Exception] [{}]",jpe.getMessage());
+//        }
     }
 }

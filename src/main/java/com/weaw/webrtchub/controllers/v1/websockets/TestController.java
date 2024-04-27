@@ -9,8 +9,8 @@ public class TestController {
 
 
     @GET
-    public void testGet(){
-        System.out.println("JE SUIS DANS LA BONNE METHOD");
+    public void testGet(String test, int number){
+        System.out.println("JE SUIS DANS LA BONNE METHOD : "+test+" Number : "+number);
     }
 
     @POST(path = "/api/test")
