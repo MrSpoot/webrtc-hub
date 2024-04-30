@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CanalService {
@@ -27,15 +26,17 @@ public class CanalService {
         this.messageService = messageService;
     }
 
-    public void processMessage(Message message) {
+    public Message processMessage(Message message) {
         Canal canal = findById(message.getRecipientId());
         if(canal != null) {
             List<WebSocketSession> sessions = sessionService.getUserSessions(canal.getUsers());
-            sessionService.sendMessage(sessions, "",message);
+            sessionService.sendMessage(sessions,message);
             canal.getMessages().add(message);
-            messageService.save(message);
+            Message response = messageService.save(message);
             save(canal);
+            return response;
         }
+        return null;
     }
 
     public Canal findById(String id) {

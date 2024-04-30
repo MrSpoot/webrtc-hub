@@ -18,6 +18,7 @@ public class BeanConfiguration {
     private static final DateTimeFormatter datePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS");
 
     private final ApplicationContext applicationContext;
+    private ObjectMapper objectMapper;
 
     @Autowired
     public BeanConfiguration(ApplicationContext applicationContext) {
@@ -33,12 +34,14 @@ public class BeanConfiguration {
 
         objectMapper.registerModule(javaTimeModule);
 
+        this.objectMapper = objectMapper;
+
         return objectMapper;
     }
 
     @Bean
     public WebSocketControllerHandler webSocketControllerHandler() {
-        return new WebSocketControllerHandler(applicationContext);
+        return new WebSocketControllerHandler(applicationContext,objectMapper);
     }
 
 }

@@ -52,7 +52,9 @@ public class WeawWebSocketHandler extends TextWebSocketHandler {
             WebSocketMessage webSocketMessage1 = objectMapper.readValue(payload, WebSocketMessage.class);
             checkSessionValidityAndExtractUserId(session);
 
-            this.webSocketControllerHandler.processWebSocketMessage(webSocketMessage1);
+            String response = objectMapper.writeValueAsString(this.webSocketControllerHandler.processWebSocketMessage(webSocketMessage1));
+
+            session.sendMessage(new TextMessage(response));
         }catch (Exception e) {
             throw e;
             //logger.error("Error during websocket message processing | Exception : {}",e.toString());

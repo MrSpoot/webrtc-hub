@@ -15,6 +15,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,7 +44,8 @@ public class SessionService {
     public List<WebSocketSession> getUserSessions(List<Long> usersId) {
         logger.debug("Getting user sessions for userId: {}", usersId);
         List<WebSocketSession> sessions = new ArrayList<>();
-        usersId.forEach(u -> sessions.addAll(userSessions.get(u)));
+        usersId.forEach(u -> sessions.addAll(userSessions.getOrDefault(u, Collections.emptyList()))
+        );
         return sessions;
     }
 
@@ -62,40 +64,38 @@ public class SessionService {
         List<WebSocketSession> sessions = userSessions.get(userId);
         if (sessions != null) {
             sessions.remove(session);
-            if(sessions.isEmpty()) {
+            if (sessions.isEmpty()) {
                 userSessions.remove(userId);
-            }else {
+            } else {
                 userSessions.put(userId, sessions);
             }
         }
     }
 
-    public void sendMessage(WebSocketSession session, String path, Message message) {
-//        logger.debug("Sending message: {}", message);
-//        WebSocketMessage webSocketMessage = new WebSocketMessage(path, message);
-//        try {
-//            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(webSocketMessage)));
-//        }catch (JsonProcessingException jpe) {
-//            logger.error("Cannot parse message [Exception] [{}]",jpe.getMessage());
-//        } catch (IOException ioe) {
-//            logger.error("Cannot send message [Exception] [{}]",ioe.getMessage());
-//        }
+    public void sendMessage(WebSocketSession session, Message message) {
+        logger.debug("Sending message: {}", message);
+        try {
+            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+        } catch (JsonProcessingException jpe) {
+            logger.error("Cannot parse message [Exception] [{}]", jpe.getMessage());
+        } catch (IOException ioe) {
+            logger.error("Cannot send message [Exception] [{}]", ioe.getMessage());
+        }
     }
 
-    public void sendMessage(List<WebSocketSession> sessions, String path, Message message) {
-//        logger.debug("Sending message: {}", message);
-//        WebSocketMessage webSocketMessage = new WebSocketMessage(path, message);
-//        try {
-//            TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(webSocketMessage));
-//            sessions.forEach(session -> {
-//                try {
-//                    session.sendMessage(textMessage);
-//                } catch (IOException e) {
-//                    logger.error("Cannot send message [Exception] [{}]",e.getMessage());
-//                }
-//            });
-//        }catch (JsonProcessingException jpe) {
-//            logger.error("Cannot parse message [Exception] [{}]",jpe.getMessage());
-//        }
+    public void sendMessage(List<WebSocketSession> sessions, Message message) {
+        logger.debug("Sending message: {}", message);
+        try {
+            TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(message));
+            sessions.forEach(session -> {
+                try {
+                    session.sendMessage(textMessage);
+                } catch (IOException e) {
+                    logger.error("Cannot send message [Exception] [{}]", e.getMessage());
+                }
+            });
+        } catch (JsonProcessingException jpe) {
+            logger.error("Cannot parse message [Exception] [{}]", jpe.getMessage());
+        }
     }
 }

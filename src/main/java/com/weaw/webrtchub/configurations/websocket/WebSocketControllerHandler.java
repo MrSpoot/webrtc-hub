@@ -1,6 +1,10 @@
 package com.weaw.webrtchub.configurations.websocket;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.weaw.webrtchub.enumerations.WebSocketStatusCode;
 import com.weaw.webrtchub.models.WebSocketMessage;
+import com.weaw.webrtchub.models.WebSocketResponse;
 import com.weaw.webrtchub.utils.annotations.WebSocketController;
 import com.weaw.webrtchub.utils.annotations.methods.DELETE;
 import com.weaw.webrtchub.utils.annotations.methods.GET;
@@ -22,13 +26,14 @@ public class WebSocketControllerHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketControllerHandler.class);
 
     private final ApplicationContext applicationContext;
+    private final ObjectMapper objectMapper;
 
     private final Map<String, Object> webSocketClassInstance = new HashMap<>();
-
     private final Map<String, Method> webSocketEndpointMap = new HashMap<>();
 
-    public WebSocketControllerHandler(ApplicationContext applicationContext) {
+    public WebSocketControllerHandler(ApplicationContext applicationContext, ObjectMapper objectMapper) {
         this.applicationContext = applicationContext;
+        this.objectMapper = objectMapper;
         LOGGER.info("Configure WebSocket Controller");
         Map<String, Object> beansWithAnnotation = applicationContext.getBeansWithAnnotation(WebSocketController.class);
         for (Object bean : beansWithAnnotation.values()) {
@@ -95,15 +100,27 @@ public class WebSocketControllerHandler {
         if(classPath.endsWith("/")) {
             classPath = classPath.substring(0, classPath.length()-1);
         }
-        return method + ":" + classPath + "/" + endpointPath;
+        if(endpointPath.isEmpty()) {
+            return method + ":" + "/" + classPath;
+        }else{
+            return method + ":" + "/" + classPath + "/" + endpointPath;
+        }
+
     }
 
-    public WebSocketMessage processWebSocketMessage(WebSocketMessage message){
+    public WebSocketResponse processWebSocketMessage(WebSocketMessage message){
         if(this.webSocketEndpointMap.containsKey(message.getPath())){
             Method method = this.webSocketEndpointMap.get(message.getPath());
             Object bean = this.webSocketClassInstance.get(message.getPath());
             try {
-                invoke(method,bean,message.getPayload());
+                Class<?>[] parameterTypes = method.getParameterTypes();
+                Parameter[] methodParameters = method.getParameters();
+
+                if (methodParameters.length != message.getPayload().size()) {
+                    return new WebSocketResponse(WebSocketStatusCode.INVALID_ARGUMENT, "Websocket Endpoint "+message.getPath()+" invalid argument number");
+                }
+                Object response = invoke(method,bean,parameterTypes,methodParameters,message.getPayload());
+                return new WebSocketResponse(WebSocketStatusCode.OK, response);
             } catch (IllegalAccessException e) {
                 System.out.println(e);
                 throw new RuntimeException(e);
@@ -112,19 +129,12 @@ public class WebSocketControllerHandler {
                 throw new RuntimeException(e);
             }
         }else {
-
+            LOGGER.error("Websocket Endpoint {} not found", message.getPath());
+            return new WebSocketResponse(WebSocketStatusCode.NOT_FOUND, "Websocket Endpoint "+message.getPath()+" not found");
         }
-        return message;
     }
 
-    private void invoke(Method method, Object bean, Map<String,Object> parameters) throws IllegalAccessException, InvocationTargetException {
-        Class<?>[] parameterTypes = method.getParameterTypes();
-        Parameter[] methodParameters = method.getParameters();
-
-        if (methodParameters.length != parameters.size()) {
-            throw new IllegalArgumentException("Nombre de paramètres incorrect pour la méthode");
-        }
-
+    private Object invoke(Method method, Object bean,Class<?>[] parameterTypes,Parameter[] methodParameters, Map<String,Object> parameters) throws IllegalAccessException, InvocationTargetException {
         Object[] args = new Object[methodParameters.length];
 
         for(int i = 0; i < methodParameters.length; i++) {
@@ -134,30 +144,16 @@ public class WebSocketControllerHandler {
             AtomicBoolean findParam = new AtomicBoolean(false);
             int finalI = i;
             parameters.forEach((key, value) -> {
-                if(expectedType.isPrimitive()){
-                    if (expectedType == int.class && value instanceof Integer v) {
-                        args[finalI] = v;
-                    }
-                    if (expectedType == long.class && value instanceof Long v) {
-                        args[finalI] = v;
-                    }
-                    if (expectedType == double.class && value instanceof Double v) {
-                        args[finalI] = v;
-                    }
-                }else{
-                    if(expectedType.isAssignableFrom(value.getClass()) && name.equals(key)) {
-                        findParam.set(true);
-                        args[finalI] = value;
+                if(name.equals(key)){
+                    try {
+                        args[finalI] = objectMapper.readValue(objectMapper.writeValueAsString(value),expectedType);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
                     }
                 }
-
-
             });
-            if(!findParam.get()) {
-
-            }
         }
-        method.invoke(bean, args);
+        return method.invoke(bean, args);
     }
 
 }
