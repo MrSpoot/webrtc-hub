@@ -22,7 +22,8 @@ public class TokenService {
     public Token generateToken(String subject) {
         Token token = new Token();
         token.setToken(AuthenticationUtils.generateToken(subject));
-        return tokenRepository.save(token);
+        Token findedToken = tokenRepository.findByToken(token.getToken());
+        return findedToken != null ? findedToken : tokenRepository.save(token);
     }
 
     public boolean validateToken(String token) {

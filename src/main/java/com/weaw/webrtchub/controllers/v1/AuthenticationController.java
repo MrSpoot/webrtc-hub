@@ -5,6 +5,8 @@ import com.weaw.webrtchub.models.dtos.UserCreationDTO;
 import com.weaw.webrtchub.models.dtos.UserLoginDTO;
 import com.weaw.webrtchub.services.AuthenticationService;
 import com.weaw.webrtchub.utils.annotations.Unsecured;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +35,17 @@ public class AuthenticationController {
 
     @PostMapping(path = "/signin")
     @Unsecured
-    public String signIn(@RequestBody UserLoginDTO loginDto) {
-        return authenticationService.login(loginDto);
+    public String signIn(@RequestBody UserLoginDTO loginDto, HttpServletResponse response) {
+        String token = authenticationService.login(loginDto);
+
+        Cookie cookie = new Cookie("token", token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(864000);
+        response.addCookie(cookie);
+
+        return token;
     }
 
     @PostMapping(path = "/signout")

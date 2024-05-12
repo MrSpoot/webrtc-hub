@@ -36,6 +36,11 @@ public class AuthenticationService {
 
     public String login(UserLoginDTO loginDTO){
         User user = userService.getUserByEmail(loginDTO.getUsername());
+
+        if(user == null){
+            user = userService.getUserByUsername(loginDTO.getUsername());
+        }
+
         if(user != null && AuthenticationUtils.checkPassword(loginDTO.getPassword(), user.getPassword())){
             return tokenService.generateToken(String.valueOf(user.getId())).getToken();
         }else {
