@@ -1,6 +1,5 @@
 package com.weaw.webrtchub.services;
 
-import com.weaw.webrtchub.enumerations.PayloadType;
 import com.weaw.webrtchub.models.Canal;
 import com.weaw.webrtchub.models.dtos.CanalCreationDTO;
 import com.weaw.webrtchub.models.payloads.Message;
