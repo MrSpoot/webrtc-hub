@@ -1,10 +1,10 @@
+import { useToast } from "@chakra-ui/react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import svg from "../assets/layered-waves-haikei.svg";
 import ButtonComponent from "../components/button.component";
 import InputComponent from "../components/input.component";
-import { Navigate, useNavigate } from "react-router-dom";
-import { Avatar, Button, useToast } from "@chakra-ui/react";
-import { signIn } from "../services/auth.services";
+import authService from "../services/auth.services";
 
 const LoginContainer: React.FC = () => {
   const navigate = useNavigate();
@@ -13,10 +13,11 @@ const LoginContainer: React.FC = () => {
   const [password, setPassword] = useState("");
 
   const login = () => {
-    signIn({
-      username: username,
-      password: password,
-    })
+    authService
+      .signIn({
+        username: username,
+        password: password,
+      })
       .then((r) => {
         toast({
           title: "Login success",

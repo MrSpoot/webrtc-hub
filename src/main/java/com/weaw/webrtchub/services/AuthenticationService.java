@@ -25,7 +25,7 @@ public class AuthenticationService {
     }
 
     public User createAccount(UserCreationDTO usercreationDTO){
-        if(userService.getUserByEmail(usercreationDTO.getEmail()) == null){
+        if(userService.getUserByEmail(usercreationDTO.getEmail()) == null && userService.getUserByUsername(usercreationDTO.getUsername()) == null){
             User userToRegister = new User(usercreationDTO);
             userToRegister.setPassword(AuthenticationUtils.hashPassword(usercreationDTO.getPassword()));
             return userService.save(userToRegister);

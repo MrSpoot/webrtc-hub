@@ -1,12 +1,12 @@
+import { ChakraProvider } from "@chakra-ui/react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AppContainer from "./containers/app.container";
 import LoginContainer from "./containers/login.container";
+import NotFoundContainer from "./containers/not-found.container";
+import RegisterContainer from "./containers/register.container";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import RegisterContainer from "./containers/register.container";
-import NotFoundContainer from "./containers/not-found.container";
-import AppContainer from "./containers/app.container";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <div className="flex bg-white w-screen h-screen">

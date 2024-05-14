@@ -4,10 +4,17 @@ import axios from "../config/axios.config";
 import { UserCreationDto } from "../models/dto/user-creation.dto";
 import { UserLoginDto } from "../models/dto/user-login.dto";
 
-export function signUp(user: UserCreationDto): Promise<any> {
+const signUp = (user: UserCreationDto): Promise<any> => {
   return axios.post(AUTH_API_ENDPOINTS.REGISTER, user);
-}
+};
 
-export function signIn(login: UserLoginDto): Promise<any> {
+const signIn = (login: UserLoginDto): Promise<any> => {
   return axios.post(AUTH_API_ENDPOINTS.LOGIN, login);
-}
+};
+
+const authService = {
+  signIn,
+  signUp,
+};
+
+export default authService;

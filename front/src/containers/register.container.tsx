@@ -1,10 +1,10 @@
+import { useToast } from "@chakra-ui/react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import svg from "../assets/layered-waves-haikei.svg";
 import ButtonComponent from "../components/button.component";
 import InputComponent from "../components/input.component";
-import { useNavigate } from "react-router-dom";
-import { signUp } from "../services/auth.services";
-import { useToast } from "@chakra-ui/react";
+import authService from "../services/auth.services";
 
 const RegisterContainer: React.FC = () => {
   const navigate = useNavigate();
@@ -16,22 +16,33 @@ const RegisterContainer: React.FC = () => {
   const [password, setPassword] = useState("");
 
   const register = () => {
-    signUp({
-      username: username,
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
-      password: password,
-    }).then((r) => {
-      toast({
-        title: "Register success",
-        status: "success",
-        isClosable: true,
-        duration: 5000,
-        position: "bottom-left",
+    authService
+      .signUp({
+        username: username,
+        firstname: firstname,
+        lastname: lastname,
+        email: email,
+        password: password,
+      })
+      .then((r) => {
+        toast({
+          title: "Register success",
+          status: "success",
+          isClosable: true,
+          duration: 5000,
+          position: "bottom-left",
+        });
+        navigate("/auth/login");
+      })
+      .catch((r) => {
+        toast({
+          title: "Register error",
+          status: "error",
+          isClosable: true,
+          duration: 5000,
+          position: "bottom-left",
+        });
       });
-      navigate("/auth/login");
-    });
   };
 
   return (
