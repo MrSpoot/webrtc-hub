@@ -5,20 +5,26 @@ import AppContainer from "./containers/app.container";
 import LoginContainer from "./containers/login.container";
 import NotFoundContainer from "./containers/not-found.container";
 import RegisterContainer from "./containers/register.container";
+import { ServiceProvider } from "./context/service.context";
+import { UserProvider } from "./context/user.context";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <div className="flex bg-white w-screen h-screen">
     <ChakraProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="app" element={<AppContainer />} />
-          <Route path="auth/login" element={<LoginContainer />} />
-          <Route path="auth/register" element={<RegisterContainer />} />
-          <Route path="*" element={<NotFoundContainer />} />
-        </Routes>
-      </BrowserRouter>
+      <UserProvider>
+        <ServiceProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="app" element={<AppContainer />} />
+              <Route path="auth/login" element={<LoginContainer />} />
+              <Route path="auth/register" element={<RegisterContainer />} />
+              <Route path="*" element={<NotFoundContainer />} />
+            </Routes>
+          </BrowserRouter>
+        </ServiceProvider>
+      </UserProvider>
     </ChakraProvider>
   </div>
 );

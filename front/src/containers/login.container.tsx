@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import svg from "../assets/layered-waves-haikei.svg";
 import ButtonComponent from "../components/button.component";
 import InputComponent from "../components/input.component";
-import authService from "../services/auth.services";
+import { useServices } from "../context/service.context";
 
 const LoginContainer: React.FC = () => {
   const navigate = useNavigate();
+  const { authService } = useServices();
   const toast = useToast();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +19,7 @@ const LoginContainer: React.FC = () => {
         username: username,
         password: password,
       })
-      .then((r) => {
+      .then(() => {
         toast({
           title: "Login success",
           status: "success",
@@ -28,7 +29,7 @@ const LoginContainer: React.FC = () => {
         });
         navigate("/app");
       })
-      .catch((r) =>
+      .catch(() =>
         toast({
           title: "Login error",
           status: "error",
