@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.weaw.webrtchub.configurations.websocket.WebSocketControllerHandler;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +43,14 @@ public class BeanConfiguration {
     @Bean
     public WebSocketControllerHandler webSocketControllerHandler() {
         return new WebSocketControllerHandler(applicationContext,objectMapper);
+    }
+
+    @Bean
+    public GroupedOpenApi v1Api() {
+        return GroupedOpenApi.builder()
+                .group("v1")
+                .pathsToMatch("/api/v1/**")
+                .build();
     }
 
 }
