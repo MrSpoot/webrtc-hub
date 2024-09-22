@@ -6,9 +6,9 @@ export interface LoginData {
 }
 
 export interface RegisterData extends LoginData {
-  username: string;
   firstname: string;
   lastname: string;
+  email: string;
 }
 
 export interface RegisterDataResponse extends RegisterData {

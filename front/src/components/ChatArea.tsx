@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 
 export default function ChatArea() {
@@ -27,8 +28,15 @@ export default function ChatArea() {
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Tapez votre message..."
             className="flex-1 mr-2"
-          />
-          <Button type="submit">Envoyer</Button>
+          ></Input>
+          <Button
+            type="submit"
+            variant={"ghost"}
+            className="rounded-full"
+            size={"icon"}
+          >
+            <PaperPlaneIcon />
+          </Button>
         </div>
       </form>
     </div>
