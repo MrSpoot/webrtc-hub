@@ -1,4 +1,4 @@
-import { apiCall } from "@/lib/axios";
+import api from "@/lib/axios";
 
 export interface LoginData {
   username: string;
@@ -19,11 +19,19 @@ export interface AuthResponse {
   token: string;
 }
 
-export const authService = {
-  login: (data: LoginData) => apiCall<string>("post", "/auth/signin", data),
+export const login = (data: LoginData): Promise<string> => {
+  return api
+    .post("/auth/signin", data)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};
 
-  register: (data: RegisterData) =>
-    apiCall<RegisterDataResponse>("post", "/auth/signup", data),
+export const register = (data: RegisterData): Promise<string> => {
+  return api.post("/auth/signup", data).then((response) => response.data);
+};
 
-  logout: () => apiCall<void>("post", "/auth/signout"),
+export const logout = (): Promise<string> => {
+  return api.post("/auth/signout").then((response) => response.data);
 };

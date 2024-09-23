@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -12,17 +13,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LoadingButton } from "@/components/ui/loading-button";
-import { useApi } from "@/src/hooks/useApi";
-import {
-  authService,
-  LoginData,
-  RegisterData,
-  RegisterDataResponse,
-} from "@/src/services";
+import { register } from "@/src/services";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
-import { register } from "module";
 import { useRouter } from "next/navigation";
-import { use, useState } from "react";
+import { useState } from "react";
 
 export default function RegisterPage() {
   const [formStep, setFormStep] = useState(0); // État pour l'étape actuelle
@@ -33,18 +27,17 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const {
-    execute: login,
-    loading,
-    error,
-  } = useApi<RegisterDataResponse, [RegisterData]>(authService.register);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login({ username, password, email, firstname, lastname }).then(() =>
-      router.push("/login")
-    );
+    setLoading(true);
+    register({ username, password, email, firstname, lastname })
+      .then(() => {
+        router.push("/login");
+      })
+      .finally(() => setLoading(false));
   };
 
   // Gérer le passage à l'étape suivante
@@ -209,7 +202,6 @@ export default function RegisterPage() {
             )}
           </div>
         </CardFooter>
-        {error && <p className="mt-2 text-red-500 text-sm">{error}</p>}
       </Card>
     </div>
   );

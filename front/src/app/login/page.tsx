@@ -11,25 +11,27 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useApi } from "@/src/hooks/useApi";
-import { authService, LoginData } from "@/src/services";
+import { login } from "@/src/services";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
-  const { execute: login, loading } = useApi<string, [LoginData]>(
-    authService.login
-  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login({ username, password }).then((d) => {
-      localStorage.setItem("token", d);
-      router.push("/chat");
-    });
+    setLoading(true);
+    login({ username, password })
+      .then((d) => {
+        localStorage.setItem("token", d);
+        router.push("/app");
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
   };
 
   return (

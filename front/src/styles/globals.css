@@ -48,6 +48,18 @@ body {
     --input: 11 30% 18%;
     --ring: 11 82% 56%;
     --radius: 0.5rem;
+
+    --error: 0 80% 60%;
+    --error-foreground: 0 80% 60%;
+
+    --success: 0 100% 30%;
+    --success-foreground: 0 100% 30%;
+
+    --info: 0 100% 30%;
+    --info-foreground: 0 100% 30%;
+
+    --warning: 0 100% 30%;
+    --warning-foreground: 0 100% 30%;
   }
   .dark  {
     --background: 11 50% 5%;
@@ -70,6 +82,18 @@ body {
     --input: 11 30% 18%;
     --ring: 11 82% 56%;
     --radius: 0.5rem;
+
+    --error: 0 80% 60%;
+    --error-foreground: 0 80% 60%;
+
+    --success: 0 100% 30%;
+    --success-foreground: 0 100% 30%;
+
+    --info: 0 100% 30%;
+    --info-foreground: 0 100% 30%;
+
+    --warning: 0 100% 30%;
+    --warning-foreground: 0 100% 30%;
   }
 }  
 

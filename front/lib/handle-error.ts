@@ -12,12 +12,13 @@ export const handleHttpError = (
       variant: "error",
     });
   } else {
+    console.log(error.response);
     switch (error.response.status) {
       case 401:
         toast({
           itemID: "expired-session",
-          title: error.response.data.data.message,
-          variant: "info",
+          title: "test",
+          variant: "error",
         });
         break;
       case 403:
