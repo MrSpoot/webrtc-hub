@@ -1,5 +1,6 @@
 package com.weaw.webrtchub.controllers;
 
+import com.weaw.webrtchub.exceptions.InvalidTokenException;
 import com.weaw.webrtchub.exceptions.UsernameAlreadyTakenException;
 import com.weaw.webrtchub.exceptions.WrongCredentialsException;
 import org.slf4j.Logger;
@@ -24,6 +25,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WrongCredentialsException.class)
     public ResponseEntity<Object> handleWrongCredentialsException(WrongCredentialsException ex) {
+        return parseMessage(ex, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException ex) {
         return parseMessage(ex, HttpStatus.UNAUTHORIZED);
     }
 

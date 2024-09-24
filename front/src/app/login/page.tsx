@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { login } from "@/src/services";
+import { useUserStore } from "@/hooks/use-userStore";
+import { getUserInfo, login } from "@/src/services";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -19,6 +20,7 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setUser } = useUserStore();
 
   const router = useRouter();
 
@@ -26,8 +28,10 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     login({ username, password })
-      .then((d) => {
-        localStorage.setItem("token", d);
+      .then(() => {
+        getUserInfo().then((u) => {
+          setUser({ id: u.id, username: u.username, email: u.email });
+        });
         router.push("/app");
       })
       .catch(() => {})
