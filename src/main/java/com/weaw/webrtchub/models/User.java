@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -34,6 +36,9 @@ public class User {
     @Column(name = "last_name", nullable = false, length = 50)
     private String lastname;
 
+    @OneToMany(mappedBy = "user")
+    private List<UserFriends> friends;
+
     @Column(nullable = true)
     private LocalDateTime createdAt;
 
@@ -46,6 +51,7 @@ public class User {
         this.email = userCreationDTO.getEmail();
         this.firstname = userCreationDTO.getFirstname();
         this.lastname = userCreationDTO.getLastname();
+        this.friends = new ArrayList<>();
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }

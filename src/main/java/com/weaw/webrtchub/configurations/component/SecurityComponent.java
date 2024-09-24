@@ -45,6 +45,7 @@ public class SecurityComponent implements HandlerInterceptor {
             if(cookieOptional.isPresent()) {
                 Cookie cookie = cookieOptional.get();
                 if (tokenService.validateToken(cookie.getValue())) {
+                    request.setAttribute("token", cookie.getValue());
                     return true;
                 }
             }

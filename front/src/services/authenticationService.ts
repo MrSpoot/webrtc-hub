@@ -1,4 +1,5 @@
 import api from "@/lib/axios";
+import { Profile } from "./userService";
 
 export interface LoginData {
   username: string;
@@ -17,9 +18,10 @@ export interface RegisterDataResponse extends RegisterData {
 
 export interface AuthResponse {
   token: string;
+  user: Profile;
 }
 
-export const login = (data: LoginData): Promise<string> => {
+export const login = (data: LoginData): Promise<AuthResponse> => {
   return api
     .post("/auth/signin", data)
     .then((response) => response.data)

@@ -1,7 +1,11 @@
 package com.weaw.webrtchub.controllers.v1;
 
+import com.weaw.webrtchub.exceptions.FriendShipAlreadyExist;
 import com.weaw.webrtchub.exceptions.InvalidTokenException;
+import com.weaw.webrtchub.exceptions.UserNotFoundException;
 import com.weaw.webrtchub.models.User;
+import com.weaw.webrtchub.models.UserFriends;
+import com.weaw.webrtchub.models.dtos.UserFriendsResponseDTO;
 import com.weaw.webrtchub.models.projections.Profile;
 import com.weaw.webrtchub.services.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,13 +41,14 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<Profile> getUserProfile(HttpServletRequest request) {
-        Optional<Cookie> cookieOptional = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("token")).findFirst();
-        if(cookieOptional.isPresent()) {
-            String token = cookieOptional.get().getValue();
-            return ResponseEntity.ok(userService.getUserProfile(token));
-        }
-        return null;
+    public ResponseEntity<Profile> getUserProfile(@RequestParam String email) {
+        return ResponseEntity.ok(userService.getUserProfile(email));
+    }
+
+    @PostMapping("/friend")
+    public ResponseEntity<UserFriendsResponseDTO> addFriend(@RequestParam long friendId, HttpServletRequest request) throws UserNotFoundException, FriendShipAlreadyExist {
+        String token = request.getAttribute("token").toString();
+        return ResponseEntity.ok(new UserFriendsResponseDTO(userService.addFriend(token,friendId)));
     }
 
 }

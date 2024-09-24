@@ -1,5 +1,6 @@
 package com.weaw.webrtchub.utils;
 
+import com.weaw.webrtchub.exceptions.InvalidTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.mindrot.jbcrypt.BCrypt;
@@ -43,7 +44,7 @@ public class AuthenticationUtils {
         }
     }
 
-    public static Long extractUserId(String token) {
+    public static long extractUserId(String token) {
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(SECRET_KEY)
@@ -51,7 +52,7 @@ public class AuthenticationUtils {
                     .parseClaimsJws(token).getPayload();
             return Long.parseLong(claims.get("userId").toString());
         } catch (Exception e) {
-            return null;
+            throw new InvalidTokenException(token);
         }
     }
 

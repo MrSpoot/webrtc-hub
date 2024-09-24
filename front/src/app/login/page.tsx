@@ -28,9 +28,11 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     login({ username, password })
-      .then(() => {
-        getUserInfo().then((u) => {
-          setUser({ id: u.id, username: u.username, email: u.email });
+      .then((d) => {
+        setUser({
+          id: d.user.id,
+          username: d.user.username,
+          email: d.user.email,
         });
         router.push("/app");
       })

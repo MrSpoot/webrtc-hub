@@ -1,6 +1,7 @@
 package com.weaw.webrtchub.controllers.v1;
 
 import com.weaw.webrtchub.models.User;
+import com.weaw.webrtchub.models.dtos.LoginResponseDTO;
 import com.weaw.webrtchub.models.dtos.UserCreationDTO;
 import com.weaw.webrtchub.models.dtos.UserLoginDTO;
 import com.weaw.webrtchub.services.AuthenticationService;
@@ -40,17 +41,17 @@ public class AuthenticationController {
     @PostMapping(path = "/signin")
     @Unsecured
     @Operation(summary = "To sign in")
-    public String signIn(@RequestBody UserLoginDTO loginDto, HttpServletResponse response) {
-        String token = authenticationService.login(loginDto);
+    public LoginResponseDTO signIn(@RequestBody UserLoginDTO loginDto, HttpServletResponse response) {
+        LoginResponseDTO responseDTO = authenticationService.login(loginDto);
 
-        Cookie cookie = new Cookie("token", token);
+        Cookie cookie = new Cookie("token", responseDTO.getToken());
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(864000);
         response.addCookie(cookie);
 
-        return token;
+        return responseDTO;
     }
 
     @PostMapping(path = "/signout")

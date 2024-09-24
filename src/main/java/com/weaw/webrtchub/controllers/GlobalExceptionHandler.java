@@ -1,8 +1,6 @@
 package com.weaw.webrtchub.controllers;
 
-import com.weaw.webrtchub.exceptions.InvalidTokenException;
-import com.weaw.webrtchub.exceptions.UsernameAlreadyTakenException;
-import com.weaw.webrtchub.exceptions.WrongCredentialsException;
+import com.weaw.webrtchub.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -31,6 +29,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException ex) {
         return parseMessage(ex, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex) {
+        return parseMessage(ex, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(FriendShipAlreadyExist.class)
+    public ResponseEntity<Object> handleFriendShipAlreadyExist(FriendShipAlreadyExist ex) {
+        return parseMessage(ex, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(Exception.class)

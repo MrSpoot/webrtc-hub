@@ -3,8 +3,10 @@ package com.weaw.webrtchub.services;
 import com.weaw.webrtchub.exceptions.UsernameAlreadyTakenException;
 import com.weaw.webrtchub.exceptions.WrongCredentialsException;
 import com.weaw.webrtchub.models.User;
+import com.weaw.webrtchub.models.dtos.LoginResponseDTO;
 import com.weaw.webrtchub.models.dtos.UserCreationDTO;
 import com.weaw.webrtchub.models.dtos.UserLoginDTO;
+import com.weaw.webrtchub.models.projections.Profile;
 import com.weaw.webrtchub.utils.AuthenticationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +36,7 @@ public class AuthenticationService {
         }
     }
 
-    public String login(UserLoginDTO loginDTO){
+    public LoginResponseDTO login(UserLoginDTO loginDTO){
         User user = userService.getUserByEmail(loginDTO.getUsername());
 
         if(user == null){
@@ -42,7 +44,10 @@ public class AuthenticationService {
         }
 
         if(user != null && AuthenticationUtils.checkPassword(loginDTO.getPassword(), user.getPassword())){
-            return tokenService.generateToken(String.valueOf(user.getId())).getToken();
+            String token = tokenService.generateToken(String.valueOf(user.getId())).getToken();
+            Profile profile = new Profile(user);
+
+            return new LoginResponseDTO(token,profile);
         }else {
             throw new WrongCredentialsException();
         }

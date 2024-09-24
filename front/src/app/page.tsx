@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { addNewFriend } from "../services";
 
 export default function Home() {
   return (
     <div className="flex flex-col justify-center items-center gap-4">
       <h1>Home</h1>
       <Button variant={"default"}>Click me</Button>
-      <Button variant={"destructive"}>Click me</Button>
+      <Button variant={"destructive"}>Add Friend</Button>
       <Button variant={"ghost"}>Click me</Button>
       <Button variant={"link"}>Click me</Button>
       <Button variant={"outline"}>Click me</Button>
