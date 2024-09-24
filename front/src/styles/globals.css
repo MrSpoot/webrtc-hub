@@ -52,14 +52,14 @@ body {
     --error: 0 80% 60%;
     --error-foreground: 0 80% 60%;
 
-    --success: 0 100% 30%;
-    --success-foreground: 0 100% 30%;
+    --success: 121 51% 68%;
+    --success-foreground: 121 51% 68%;
 
-    --info: 0 100% 30%;
-    --info-foreground: 0 100% 30%;
+    --info: 198 53% 73%;
+    --info-foreground: 198 53% 73%;
 
-    --warning: 0 100% 30%;
-    --warning-foreground: 0 100% 30%;
+    --warning: 37 70% 64%;
+    --warning-foreground: 37 70% 64%;
   }
   .dark  {
     --background: 11 50% 5%;
@@ -86,14 +86,14 @@ body {
     --error: 0 80% 60%;
     --error-foreground: 0 80% 60%;
 
-    --success: 0 100% 30%;
-    --success-foreground: 0 100% 30%;
+    --success: 121 51% 68%;
+    --success-foreground: 121 51% 68%;
 
-    --info: 0 100% 30%;
-    --info-foreground: 0 100% 30%;
+    --info: 198 53% 73%;
+    --info-foreground: 198 53% 73%;
 
-    --warning: 0 100% 30%;
-    --warning-foreground: 0 100% 30%;
+    --warning: 37 70% 64%;
+    --warning-foreground: 37 70% 64%;
   }
 }  
 

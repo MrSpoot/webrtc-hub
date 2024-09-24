@@ -38,17 +38,17 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col items-center justify-center">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Connexion</CardTitle>
-          <CardDescription>Connectez-vous à votre compte.</CardDescription>
+          <CardTitle>Sign In</CardTitle>
+          <CardDescription>Sign in to your account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Username</Label>
                 <Input
                   id="email"
-                  placeholder="votre@email.com"
+                  placeholder="Username"
                   type="email"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -56,10 +56,11 @@ export default function LoginPage() {
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="password">Mot de passe</Label>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
+                  placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -68,15 +69,24 @@ export default function LoginPage() {
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col">
+        <CardFooter className="flex flex-col gap-2">
           <Button
             className="w-full"
             type="submit"
             onClick={handleSubmit}
             disabled={loading}
           >
-            {loading ? "Connexion..." : "Se connecter"}
+            Sign In
           </Button>
+          <CardDescription>
+            No account ?{" "}
+            <a
+              className="text-primary hover:text-primary/60"
+              onClick={() => router.push("/register")}
+            >
+              Sign Up
+            </a>
+          </CardDescription>
         </CardFooter>
       </Card>
     </div>

@@ -57,8 +57,8 @@ export default function RegisterPage() {
           <CardTitle>Create an account</CardTitle>
           <CardDescription>
             {formStep === 0
-              ? "Entrez vos informations personnelles"
-              : "Entrez vos informations de connexion"}
+              ? "Enter your personals information"
+              : "Enter your accounts information"}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -66,7 +66,7 @@ export default function RegisterPage() {
             {formStep === 0 && (
               <div className="space-y-4">
                 <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="firstname">Prénom</Label>
+                  <Label htmlFor="firstname">Firstname</Label>
                   <Input
                     id="firstname"
                     type="text"
@@ -76,7 +76,7 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="lastname">Nom</Label>
+                  <Label htmlFor="lastname">Lastname</Label>
                   <Input
                     id="lastname"
                     type="text"
@@ -89,7 +89,7 @@ export default function RegisterPage() {
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
-                    placeholder="votre@email.com"
+                    placeholder="your@email.com"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -102,7 +102,7 @@ export default function RegisterPage() {
             {formStep === 1 && (
               <div className="space-y-4">
                 <div className="flex flex-col space-y-1.5">
-                  <Label htmlFor="pseudo">Nom d'utilisateur</Label>
+                  <Label htmlFor="pseudo">Username</Label>
                   <Input
                     id="pseudo"
                     type="text"
@@ -114,7 +114,7 @@ export default function RegisterPage() {
                 {!samePassword(password, confirmPassword) ? (
                   <>
                     <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="password">Mot de passe</Label>
+                      <Label htmlFor="password">Password</Label>
                       <Input
                         id="password"
                         type="password"
@@ -125,9 +125,7 @@ export default function RegisterPage() {
                     </div>
                     <div className="flex flex-col space-y-1.5">
                       <Label htmlFor="confirm-password">
-                        <p className=" text-red-400">
-                          Confirmation de mot de passe
-                        </p>
+                        <p className=" text-red-400">Confirm password</p>
                       </Label>
                       <Input
                         id="confirm-password"
@@ -145,7 +143,7 @@ export default function RegisterPage() {
                 ) : (
                   <>
                     <div className="flex flex-col space-y-1.5">
-                      <Label htmlFor="password">Mot de passe</Label>
+                      <Label htmlFor="password">Password</Label>
                       <Input
                         id="password"
                         type="password"
@@ -156,7 +154,7 @@ export default function RegisterPage() {
                     </div>
                     <div className="flex flex-col space-y-1.5">
                       <Label htmlFor="confirm-password">
-                        <p>Confirmation de mot de passe</p>
+                        <p>Confirm password</p>
                       </Label>
                       <Input
                         id="confirm-password"
@@ -172,35 +170,46 @@ export default function RegisterPage() {
             )}
           </form>
         </CardContent>
-        <CardFooter className="flex">
-          <div className="flex w-1/2">
-            {formStep > 0 && (
-              <Button variant="default" size={"icon"} onClick={prevStep}>
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            )}
+        <CardFooter className="flex flex-col gap-2">
+          <div className="flex w-full">
+            <div className="flex w-1/2">
+              {formStep > 0 && (
+                <Button variant="default" size={"icon"} onClick={prevStep}>
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+            <div className="flex flex-row-reverse w-1/2">
+              {formStep == 0 ? (
+                <Button variant="default" size={"icon"} onClick={nextStep}>
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              ) : (
+                <LoadingButton
+                  type="submit"
+                  disabled={loading || !samePassword(password, confirmPassword)}
+                  loading={loading}
+                  onClick={handleSubmit}
+                >
+                  <div className="flex items-center gap-2">
+                    <>
+                      <Check className="h-4 w-4" />
+                      Sign Up
+                    </>
+                  </div>
+                </LoadingButton>
+              )}
+            </div>
           </div>
-          <div className="flex flex-row-reverse w-1/2">
-            {formStep == 0 ? (
-              <Button variant="default" size={"icon"} onClick={nextStep}>
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            ) : (
-              <LoadingButton
-                type="submit"
-                disabled={loading || !samePassword(password, confirmPassword)}
-                loading={loading}
-                onClick={handleSubmit}
-              >
-                <div className="flex items-center gap-2">
-                  <>
-                    <Check className="h-4 w-4" />
-                    Valider
-                  </>
-                </div>
-              </LoadingButton>
-            )}
-          </div>
+          <CardDescription>
+            Already an account ?{" "}
+            <a
+              className="text-primary hover:text-primary/60"
+              onClick={() => router.push("/login")}
+            >
+              Sign In
+            </a>
+          </CardDescription>
         </CardFooter>
       </Card>
     </div>

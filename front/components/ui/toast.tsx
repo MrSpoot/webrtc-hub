@@ -30,12 +30,10 @@ const toastVariants = cva(
     variants: {
       variant: {
         default: "default group bg-background",
-        error: "error group bg-error",
-        success:
-          "success group border-success/50 bg-success-foreground text-success",
-        info: "info group border-info/50 bg-info-foreground text-info",
-        warning:
-          "warning group border-warning/50 bg-warning-foreground text-warning",
+        error: "error group bg-error border-error",
+        success: "success group bg-success border-success",
+        info: "info group bg-info border-info",
+        warning: "warning group bg-warning border-warning",
       },
     },
     defaultVariants: {

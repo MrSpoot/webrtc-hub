@@ -3,7 +3,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { ErrorResponse } from "./utils";
 
 export const handleHttpError = (
-  error: AxiosError<AxiosResponse<ErrorResponse>>
+  error: AxiosError<AxiosResponse<ErrorResponse, ErrorResponse>, ErrorResponse>
 ) => {
   if (!error.response) {
     toast({
@@ -15,16 +15,10 @@ export const handleHttpError = (
     console.log(error.response);
     switch (error.response.status) {
       case 401:
-        toast({
-          itemID: "expired-session",
-          title: "test",
-          variant: "error",
-        });
-        break;
       case 403:
         toast({
-          itemID: "unauthorized",
-          title: "Vous n'êtes pas autorisé à accéder à cette ressource",
+          itemID: "error",
+          title: error.response.data.message,
           variant: "error",
         });
         break;
