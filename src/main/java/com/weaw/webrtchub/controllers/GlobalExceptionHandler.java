@@ -36,8 +36,8 @@ public class GlobalExceptionHandler {
         return parseMessage(ex, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(FriendShipAlreadyExist.class)
-    public ResponseEntity<Object> handleFriendShipAlreadyExist(FriendShipAlreadyExist ex) {
+    @ExceptionHandler(FriendShipAlreadyExistException.class)
+    public ResponseEntity<Object> handleFriendShipAlreadyExist(FriendShipAlreadyExistException ex) {
         return parseMessage(ex, HttpStatus.CONFLICT);
     }
 

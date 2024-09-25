@@ -30,6 +30,15 @@ export const login = (data: LoginData): Promise<AuthResponse> => {
     });
 };
 
+export const loginWithToken = (data: string): Promise<AuthResponse> => {
+  return api
+    .post(`/auth/signin/token?token=${data}`, data)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
 export const register = (data: RegisterData): Promise<string> => {
   return api.post("/auth/signup", data).then((response) => response.data);
 };

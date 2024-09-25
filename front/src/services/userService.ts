@@ -4,13 +4,14 @@ export interface Profile {
   id: number;
   username: string;
   email: string;
+  friends: UserFriend[];
 }
 
 export interface UserFriend {
   id: number;
   user: Profile;
   friend: Profile;
-  isAccepted: boolean;
+  accepted: boolean;
 }
 
 export const getUserInfo = (email?: string): Promise<Profile> => {
@@ -22,9 +23,18 @@ export const getUserInfo = (email?: string): Promise<Profile> => {
     });
 };
 
+export const getUserFriends = (id: number): Promise<UserFriend[]> => {
+  return api
+    .get(`/users/friends?userId=${id}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
 export const addNewFriend = (friendId?: number): Promise<UserFriend> => {
   return api
-    .post(`/users/friend?friendId=${friendId}`)
+    .post(`/users/friends?friendId=${friendId}`)
     .then((response) => response.data)
     .catch((error) => {
       throw error;

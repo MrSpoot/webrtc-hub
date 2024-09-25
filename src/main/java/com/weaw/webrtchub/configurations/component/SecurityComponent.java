@@ -40,7 +40,7 @@ public class SecurityComponent implements HandlerInterceptor {
                 return true;
             }
 
-            Optional<Cookie> cookieOptional = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("token")).findFirst();
+            Optional<Cookie> cookieOptional = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("refresh-token")).findFirst();
 
             if(cookieOptional.isPresent()) {
                 Cookie cookie = cookieOptional.get();

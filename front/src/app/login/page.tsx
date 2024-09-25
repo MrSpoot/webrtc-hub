@@ -12,7 +12,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/hooks/use-userStore";
-import { getUserInfo, login } from "@/src/services";
+import {
+  getUserFriends,
+  getUserInfo,
+  login,
+  Profile,
+  UserFriend,
+} from "@/src/services";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -20,7 +26,9 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setUser } = useUserStore();
+  const { user, setUser, addFriends } = useUserStore();
+
+  const [_user, set_User] = useState<Profile>();
 
   const router = useRouter();
 
@@ -29,15 +37,33 @@ export default function LoginPage() {
     setLoading(true);
     login({ username, password })
       .then((d) => {
-        setUser({
+        set_User({
           id: d.user.id,
           username: d.user.username,
           email: d.user.email,
         });
-        router.push("/app");
+        setUser({
+          id: d.user.id,
+          username: d.user.username,
+          email: d.user.email,
+          friends: [],
+        });
       })
       .catch(() => {})
-      .finally(() => setLoading(false));
+      .finally(() => {
+        _user &&
+          getUserFriends(_user.id)
+            .then((df) => {
+              if (df) {
+                addFriends(df);
+              }
+            })
+            .catch(() => {})
+            .finally(() => {
+              router.push("/app");
+              setLoading(false);
+            });
+      });
   };
 
   return (

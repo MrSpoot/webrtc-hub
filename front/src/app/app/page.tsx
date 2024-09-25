@@ -1,18 +1,15 @@
 "use client";
 
+import { useUserStore } from "@/hooks/use-userStore";
 import AddingFriendModal from "@/src/components/AddingFriendModal";
-import UserToolBar from "@/src/components/UserToolBar";
-import { addNewFriend } from "@/src/services";
+import { useEffect } from "react";
 
 export default function AppPage() {
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    addNewFriend(2)
-      .then((d) => {
-        console.log(d);
-      })
-      .catch(() => {});
-  };
+  const { user } = useUserStore();
+
+  useEffect(() => {
+    console.log(user);
+  }, []);
 
   return (
     // <div className="min-h-screen flex items-center justify-center">
@@ -25,7 +22,7 @@ export default function AppPage() {
 
     // </div>
     <>
-      <AddingFriendModal />
+      <AddingFriendModal isOpen />
     </>
   );
 }

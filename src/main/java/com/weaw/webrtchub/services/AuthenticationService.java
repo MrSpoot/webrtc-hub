@@ -1,5 +1,6 @@
 package com.weaw.webrtchub.services;
 
+import com.weaw.webrtchub.exceptions.UserNotFoundException;
 import com.weaw.webrtchub.exceptions.UsernameAlreadyTakenException;
 import com.weaw.webrtchub.exceptions.WrongCredentialsException;
 import com.weaw.webrtchub.models.User;
@@ -49,6 +50,18 @@ public class AuthenticationService {
 
             return new LoginResponseDTO(token,profile);
         }else {
+            throw new WrongCredentialsException();
+        }
+    }
+
+    public LoginResponseDTO loginWithToken(String token) throws UserNotFoundException {
+        if(AuthenticationUtils.validateToken(token)){
+            long userId = AuthenticationUtils.extractUserId(token);
+            User user = userService.getUserById(userId);
+
+            Profile profile = new Profile(user);
+            return new LoginResponseDTO(token,profile);
+        }else{
             throw new WrongCredentialsException();
         }
     }

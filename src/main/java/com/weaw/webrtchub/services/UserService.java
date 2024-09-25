@@ -1,6 +1,6 @@
 package com.weaw.webrtchub.services;
 
-import com.weaw.webrtchub.exceptions.FriendShipAlreadyExist;
+import com.weaw.webrtchub.exceptions.FriendShipAlreadyExistException;
 import com.weaw.webrtchub.exceptions.UserNotFoundException;
 import com.weaw.webrtchub.models.User;
 import com.weaw.webrtchub.models.UserFriends;
@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -37,12 +39,20 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Profile getUserProfile(String email) {
-        User user = getUserByEmail(email);
-        return new Profile(user);
+    public User getUserById(long id) throws UserNotFoundException {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public UserFriends addFriend(String token, long friendId) throws UserNotFoundException, FriendShipAlreadyExist {
+    public Profile getUserProfile(String email) {
+        User user = getUserByEmail(email);
+        if(user != null) {
+            return new Profile(user);
+        }else{
+            return null;
+        }
+    }
+
+    public UserFriends addFriend(String token, long friendId) throws UserNotFoundException, FriendShipAlreadyExistException {
 
         long userId = AuthenticationUtils.extractUserId(token);
 
@@ -58,5 +68,10 @@ public class UserService {
         userRepository.save(friend);
 
         return friends;
+    }
+
+    public List<UserFriends> getUserFriends(long userId) throws UserNotFoundException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        return user.getFriends();
     }
 }

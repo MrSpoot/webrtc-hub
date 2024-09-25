@@ -1,5 +1,6 @@
 package com.weaw.webrtchub.controllers.v1;
 
+import com.weaw.webrtchub.exceptions.UserNotFoundException;
 import com.weaw.webrtchub.models.User;
 import com.weaw.webrtchub.models.dtos.LoginResponseDTO;
 import com.weaw.webrtchub.models.dtos.UserCreationDTO;
@@ -13,10 +14,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -34,14 +33,14 @@ public class AuthenticationController {
     @PostMapping(path = "/signup")
     @Unsecured
     @Operation(summary = "To sign up")
-    public User signUp(@RequestBody UserCreationDTO user) {
-        return authenticationService.createAccount(user);
+    public ResponseEntity<User> signUp(@RequestBody UserCreationDTO user) {
+        return ResponseEntity.ok(authenticationService.createAccount(user));
     }
 
     @PostMapping(path = "/signin")
     @Unsecured
     @Operation(summary = "To sign in")
-    public LoginResponseDTO signIn(@RequestBody UserLoginDTO loginDto, HttpServletResponse response) {
+    public ResponseEntity<LoginResponseDTO> signIn(@RequestBody UserLoginDTO loginDto, HttpServletResponse response) {
         LoginResponseDTO responseDTO = authenticationService.login(loginDto);
 
         Cookie cookie = new Cookie("token", responseDTO.getToken());
@@ -51,8 +50,25 @@ public class AuthenticationController {
         cookie.setMaxAge(864000);
         response.addCookie(cookie);
 
-        return responseDTO;
+        return ResponseEntity.ok(responseDTO);
     }
+
+    @PostMapping(path = "/signin/token")
+    @Unsecured
+    @Operation(summary = "To sign in with token")
+    public ResponseEntity<LoginResponseDTO> signInWithToken(@RequestParam String token, HttpServletResponse response) throws UserNotFoundException {
+        LoginResponseDTO responseDTO = authenticationService.loginWithToken(token);
+
+        Cookie cookie = new Cookie("token", responseDTO.getToken());
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(864000);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(responseDTO);
+    }
+
 
     @PostMapping(path = "/signout")
     @Operation(summary = "To sign out")

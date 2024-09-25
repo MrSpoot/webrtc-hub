@@ -1,6 +1,6 @@
 package com.weaw.webrtchub.services;
 
-import com.weaw.webrtchub.exceptions.FriendShipAlreadyExist;
+import com.weaw.webrtchub.exceptions.FriendShipAlreadyExistException;
 import com.weaw.webrtchub.models.User;
 import com.weaw.webrtchub.models.UserFriends;
 import com.weaw.webrtchub.repositories.UserFriendRepository;
@@ -20,11 +20,11 @@ public class UserFriendService {
         this.userFriendRepository = userFriendRepository;
     }
 
-    public UserFriends create(User user, User friend) throws FriendShipAlreadyExist {
+    public UserFriends create(User user, User friend) throws FriendShipAlreadyExistException {
         if (userFriendRepository.findFriendsShipAlreadyExist(user, friend).isEmpty()) {
             return userFriendRepository.save(new UserFriends(user, friend));
         }
-        throw new FriendShipAlreadyExist(user.getId(), friend.getId());
+        throw new FriendShipAlreadyExistException();
     }
 
 }

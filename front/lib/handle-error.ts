@@ -15,7 +15,10 @@ export const handleHttpError = (
     console.log(error.response);
     switch (error.response.status) {
       case 401:
+        //window.location.href = "/login";
+        break;
       case 403:
+      case 409:
         toast({
           itemID: "error",
           title: error.response.data.message,
