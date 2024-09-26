@@ -1,5 +1,6 @@
 package com.weaw.webrtchub.services;
 
+import com.weaw.webrtchub.exceptions.FriendRequestNotFoundException;
 import com.weaw.webrtchub.exceptions.FriendShipAlreadyExistException;
 import com.weaw.webrtchub.models.User;
 import com.weaw.webrtchub.models.UserFriends;
@@ -25,6 +26,18 @@ public class UserFriendService {
             return userFriendRepository.save(new UserFriends(user, friend));
         }
         throw new FriendShipAlreadyExistException();
+    }
+
+    public UserFriends findById(long id) throws FriendRequestNotFoundException {
+        return userFriendRepository.findById(id).orElseThrow(() -> new FriendRequestNotFoundException(id));
+    }
+
+    public UserFriends save(UserFriends userFriends) {
+        return userFriendRepository.save(userFriends);
+    }
+
+    public void delete(long id) throws FriendRequestNotFoundException {
+        userFriendRepository.deleteById(id);
     }
 
 }

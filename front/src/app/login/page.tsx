@@ -12,13 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/hooks/use-userStore";
-import {
-  getUserFriends,
-  getUserInfo,
-  login,
-  Profile,
-  UserFriend,
-} from "@/src/services";
+import { login, Profile } from "@/src/services";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -41,6 +35,7 @@ export default function LoginPage() {
           id: d.user.id,
           username: d.user.username,
           email: d.user.email,
+          friends: [],
         });
         setUser({
           id: d.user.id,
@@ -51,18 +46,7 @@ export default function LoginPage() {
       })
       .catch(() => {})
       .finally(() => {
-        _user &&
-          getUserFriends(_user.id)
-            .then((df) => {
-              if (df) {
-                addFriends(df);
-              }
-            })
-            .catch(() => {})
-            .finally(() => {
-              router.push("/app");
-              setLoading(false);
-            });
+        router.push("/app");
       });
   };
 

@@ -2,13 +2,9 @@ package com.weaw.webrtchub.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.weaw.webrtchub.configurations.websocket.WeawWebSocketHandler;
-import com.weaw.webrtchub.enumerations.PayloadType;
-import com.weaw.webrtchub.models.WebSocketMessage;
 import com.weaw.webrtchub.models.payloads.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -72,10 +68,11 @@ public class SessionService {
         }
     }
 
-    public void sendMessage(WebSocketSession session, Message message) {
-        logger.debug("Sending message: {}", message);
+    public void sendMessage(WebSocketSession session, Object object) {
         try {
-            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(message)));
+            String message = objectMapper.writeValueAsString(object);
+            logger.debug("Sending message: {}", message);
+            session.sendMessage(new TextMessage(message));
         } catch (JsonProcessingException jpe) {
             logger.error("Cannot parse message [Exception] [{}]", jpe.getMessage());
         } catch (IOException ioe) {
@@ -83,10 +80,11 @@ public class SessionService {
         }
     }
 
-    public void sendMessage(List<WebSocketSession> sessions, Message message) {
-        logger.debug("Sending message: {}", message);
+    public void sendMessage(List<WebSocketSession> sessions, Object object) {
         try {
-            TextMessage textMessage = new TextMessage(objectMapper.writeValueAsString(message));
+            String message = objectMapper.writeValueAsString(object);
+            logger.debug("Sending message: {}", message);
+            TextMessage textMessage = new TextMessage(message);
             sessions.forEach(session -> {
                 try {
                     session.sendMessage(textMessage);

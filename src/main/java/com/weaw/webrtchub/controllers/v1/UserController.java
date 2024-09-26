@@ -45,6 +45,18 @@ public class UserController {
         return ResponseEntity.ok(new UserFriendsResponseDTO(userService.addFriend(token,friendId)));
     }
 
+    @DeleteMapping("/friends/{id}")
+    public ResponseEntity<?> removeFriend(@RequestParam long id, HttpServletRequest request) {
+        String token = request.getAttribute("token").toString();
+        return ResponseEntity.ok(userService.removeFriend(token,id));
+    }
+
+    @PostMapping("/friends/{id}/respond")
+    public ResponseEntity<UserFriendsResponseDTO> addFriend(@PathVariable long id, @RequestParam(defaultValue = "false") Boolean accepted, HttpServletRequest request) throws UserNotFoundException, FriendShipAlreadyExistException {
+        String token = request.getAttribute("token").toString();
+        return ResponseEntity.ok(new UserFriendsResponseDTO(userService.respondToFriendRequest(token,id,accepted)));
+    }
+
     @GetMapping("/friends")
     public ResponseEntity<List<UserFriendsResponseDTO>> getUserFriends(@RequestParam long userId) throws UserNotFoundException, FriendShipAlreadyExistException {
         return ResponseEntity.ok(userService.getUserFriends(userId).stream().map(UserFriendsResponseDTO::new).toList());

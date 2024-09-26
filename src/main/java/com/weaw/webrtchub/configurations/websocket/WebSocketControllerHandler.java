@@ -44,7 +44,9 @@ public class WebSocketControllerHandler {
         for (String path : webSocketEndpointMap.keySet()) {
             paths.append(path).append(",");
         }
-        paths.deleteCharAt(paths.length() - 1);
+        if(paths.length() > 0){
+            paths.deleteCharAt(paths.length() - 1);
+        }
         LOGGER.info("Websocket path found : {}", paths);
 
     }
