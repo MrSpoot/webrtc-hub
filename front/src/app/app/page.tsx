@@ -1,7 +1,7 @@
 "use client";
 
 import { useUserStore } from "@/hooks/use-userStore";
-import AddingFriendModal from "@/src/components/AddingFriendModal";
+import BottomBar from "@/src/components/BottomBar";
 import { useEffect } from "react";
 
 export default function AppPage() {
@@ -12,17 +12,11 @@ export default function AppPage() {
   }, []);
 
   return (
-    // <div className="min-h-screen flex items-center justify-center">
-    //   <SideServerBar />
-    //   <Sidebar />
-    //   <div className="flew w-full">
-    //     <ChatArea />
-    //   </div>
-    //   <Sidebar />
-
-    // </div>
-    <>
-      <AddingFriendModal isOpen />
-    </>
+    <div className="h-screen flex flex-col">
+      <div className="flex-1 overflow-y-auto">
+        {/* Cette div prendra tout l'espace restant */}
+      </div>
+      <BottomBar />
+    </div>
   );
 }
