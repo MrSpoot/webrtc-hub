@@ -8,12 +8,12 @@ const servers = [
 
 export default function SideServerBar() {
   return (
-    <div className=" bg-red-500 text-white h-screen p-2">
+    <div className=" bg-card text-white h-screen p-2">
       <div className="flex flex-col gap-2">
         {servers.map((s) => {
           return (
             // eslint-disable-next-line react/jsx-key
-            <Avatar className="w-16 h-16">
+            <Avatar className="w-12 h-12">
               <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
               <AvatarFallback>{s.name}</AvatarFallback>
             </Avatar>

@@ -2,11 +2,19 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PaperPlaneIcon, PlusIcon } from "@radix-ui/react-icons";
+import { useUserStore } from "@/hooks/use-userStore";
+import {
+  ExitIcon,
+  GearIcon,
+  PaperPlaneIcon,
+  PlusIcon,
+} from "@radix-ui/react-icons";
 import { useState } from "react";
+import AvatarWithBadge from "./AvatarWithBadge";
 
 export default function BottomBar() {
   const [message, setMessage] = useState("");
+  const { user } = useUserStore();
 
   const handleSubmit = async () => {
     console.log(message);
@@ -16,7 +24,11 @@ export default function BottomBar() {
   };
 
   return (
-    <div className="flex bg-card items-center p-2">
+    <div className="flex bg-card items-center p-2 gap-4">
+      <Button variant={"ghost"} className="rounded-full" size={"icon"}>
+        <ExitIcon className="h-6 w-6" />
+      </Button>
+      <div className="flex w-1/5"></div>
       <div className="flex rounded-full flex-1 bg-[#1a1a1a] items-center p-2">
         <Button variant={"ghost"} className="rounded-full" size={"icon"}>
           <PlusIcon />
@@ -36,6 +48,17 @@ export default function BottomBar() {
         >
           <PaperPlaneIcon />
         </Button>
+      </div>
+      <div className="flex py-2 px-4 justify-between w-1/4">
+        <div className="flex gap-2 items-center">
+          <AvatarWithBadge size="xs" />
+          <p className="font-semibold">{user?.username}</p>
+        </div>
+        <div className="flex items-center">
+          <Button variant={"ghost"} className="rounded-full" size={"icon"}>
+            <GearIcon className="h-6 w-6" />
+          </Button>
+        </div>
       </div>
     </div>
   );

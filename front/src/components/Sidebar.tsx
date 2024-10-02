@@ -8,7 +8,7 @@ const channels = [
 
 export default function Sidebar() {
   return (
-    <div className="w-64 bg-gray-800 text-white h-screen p-4">
+    <div className="bg-[#292929] text-white h-screen p-4">
       <h2 className="text-xl font-bold mb-4">Canaux</h2>
       <ul>
         {channels.map((channel) => (
