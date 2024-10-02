@@ -1,34 +1,33 @@
-import { Card, CardFooter, CardHeader } from "@/components/ui/card";
-import AvatarWithBadge from "./AvatarWithBadge";
-import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useEffect, useState } from "react";
-import { addNewFriend, getUserInfo, Profile } from "../services";
-import { Clock, Plus } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useUserStore } from "@/hooks/use-userStore";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import { Clock, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { addNewFriend, getUserInfo, Profile } from "../services";
 
 interface AddingFriendModalProps {
   isOpen: boolean;
+  setOpen: (isOpen: false) => void;
 }
 
 export default function AddingFriendModal({
   isOpen = true,
+  setOpen = () => {},
 }: AddingFriendModalProps) {
-  const { user, setUser, addFriend } = useUserStore();
+  const { user, addFriend } = useUserStore();
 
   const [friend, setFriend] = useState<Profile>();
 
@@ -54,16 +53,13 @@ export default function AddingFriendModal({
 
   const _addFriend = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    friend &&
+    if (friend) {
       addNewFriend(friend.id)
         .then((d) => {
-          console.log("Add friend");
-          console.log(d);
-          console.log(user);
           addFriend(d);
         })
         .catch(() => {});
+    }
   };
 
   useEffect(() => {
@@ -71,8 +67,9 @@ export default function AddingFriendModal({
   }, [user]);
 
   return (
-    <Dialog open={isOpen}>
+    <Dialog open={isOpen} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[425px]">
+        <DialogTrigger />
         <DialogHeader>
           <DialogTitle>Add new friends</DialogTitle>
           <DialogDescription>

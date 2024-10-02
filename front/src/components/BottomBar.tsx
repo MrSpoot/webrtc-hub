@@ -9,12 +9,24 @@ import {
   PaperPlaneIcon,
   PlusIcon,
 } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { logout } from "../services";
 import AvatarWithBadge from "./AvatarWithBadge";
 
 export default function BottomBar() {
   const [message, setMessage] = useState("");
   const { user } = useUserStore();
+
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    logout()
+      .catch(() => {})
+      .finally(() => {
+        router.replace("/login");
+      });
+  };
 
   const handleSubmit = async () => {
     console.log(message);
@@ -25,7 +37,12 @@ export default function BottomBar() {
 
   return (
     <div className="flex bg-card items-center p-2 gap-4">
-      <Button variant={"ghost"} className="rounded-full" size={"icon"}>
+      <Button
+        variant={"ghost"}
+        className="rounded-full"
+        size={"icon"}
+        onClick={handleLogout}
+      >
         <ExitIcon className="h-6 w-6" />
       </Button>
       <div className="flex w-1/5"></div>

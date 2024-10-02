@@ -10,6 +10,7 @@ import com.weaw.webrtchub.utils.annotations.Unsecured;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,8 +73,18 @@ public class AuthenticationController {
 
     @PostMapping(path = "/signout")
     @Operation(summary = "To sign out")
-    public void signOut(@RequestBody String token) {
+    public ResponseEntity<Void> signOut(HttpServletRequest request, HttpServletResponse response) {
+        String token = request.getAttribute("token").toString();
         authenticationService.logout(token);
+
+        Cookie cookie = new Cookie("token", "");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+
+        response.addCookie(cookie);
+        return ResponseEntity.ok().build();
     }
 
 
