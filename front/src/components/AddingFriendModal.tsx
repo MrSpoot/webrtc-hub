@@ -11,12 +11,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "@/hooks/use-toast";
-import { useUserStore } from "@/hooks/use-userStore";
 import { DialogTrigger } from "@radix-ui/react-dialog";
+import { useQueryClient } from "@tanstack/react-query";
 import { Clock, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
-import { addNewFriend, getUserInfo, Profile } from "../services";
+import { useState } from "react";
+import { UserFriend } from "../services";
+import {
+  useAddFriend,
+  useFriendsList,
+  useGetProfile,
+} from "../services/queries/user-queries";
 
 interface AddingFriendModalProps {
   isOpen: boolean;
@@ -27,44 +31,33 @@ export default function AddingFriendModal({
   isOpen = true,
   setOpen = () => {},
 }: AddingFriendModalProps) {
-  const { user, addFriend } = useUserStore();
-
-  const [friend, setFriend] = useState<Profile>();
-
   const [email, setEmail] = useState("");
+
+  const queryClient = useQueryClient();
+  const useAddFriendMutation = useAddFriend();
+  const { data: profile, isLoading, refetch } = useGetProfile(email, false);
+  const { data: friends } = useFriendsList();
 
   const findFriend = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFriend(undefined);
-    getUserInfo(email)
-      .then((d) => {
-        if (d) {
-          setFriend(d);
-        } else {
-          toast({
-            itemID: "no-friend-find",
-            title: "User not find",
-            variant: "warning",
-          });
-        }
-      })
-      .catch(() => {});
+    refetch();
   };
 
   const _addFriend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (friend) {
-      addNewFriend(friend.id)
-        .then((d) => {
-          addFriend(d);
-        })
-        .catch(() => {});
+    if (profile) {
+      useAddFriendMutation.mutate(profile.id, {
+        onSuccess: (_friend) => {
+          queryClient.setQueryData(["friends-list"], (state: UserFriend[]) => {
+            if (state) {
+              return [...state, _friend];
+            }
+            return [_friend];
+          });
+        },
+      });
     }
   };
-
-  useEffect(() => {
-    console.log(user && user.friends);
-  }, [user]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
@@ -87,12 +80,14 @@ export default function AddingFriendModal({
                 placeholder="friend@mail.com"
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <Button onClick={findFriend}>Find</Button>
+              <Button onClick={findFriend} disabled={isLoading}>
+                Find
+              </Button>
             </form>
           </div>
           <Separator className="w-5/6" />
 
-          {friend ? (
+          {profile ? (
             <div className="flex items-center space-x-4 w-10/12">
               <Avatar className="w-12 h-12">
                 <AvatarImage
@@ -101,15 +96,15 @@ export default function AddingFriendModal({
                 />
                 <AvatarFallback />
               </Avatar>
-              <div className="h-full w-full">{friend.username}</div>
-              {user &&
-              user.friends &&
-              user.friends.filter(
-                (f) => f.friend.id === friend.id || f.user.id === friend.id
+              <div className="h-full w-full">{profile.username}</div>
+              {friends &&
+              friends.filter(
+                (f) => f.friend.id === profile.id || f.user.id === profile.id
               ).length > 0 ? (
                 <>
-                  {!user?.friends?.find(
-                    (f) => f.friend.id === friend.id || f.user.id === friend.id
+                  {!friends?.find(
+                    (f) =>
+                      f.friend.id === profile.id || f.user.id === profile.id
                   )?.accepted && (
                     <Button
                       size={"icon"}

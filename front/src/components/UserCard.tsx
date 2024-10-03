@@ -1,14 +1,16 @@
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { MessageCircleIcon, TrashIcon } from "lucide-react";
 import { Profile } from "../services";
 import AvatarWithBadge from "./AvatarWithBadge";
 
 interface UserCardProps {
   user?: Profile;
+  leftProps?: JSX.Element[];
 }
 
-export default function UserCard({ user = undefined }: UserCardProps) {
+export default function UserCard({
+  user = undefined,
+  leftProps = [],
+}: UserCardProps) {
   return (
     user && (
       <Card className="flex  items-center  p-2">
@@ -16,22 +18,7 @@ export default function UserCard({ user = undefined }: UserCardProps) {
           <AvatarWithBadge size="xs" />
           <p className="text-md font-semibold">{user?.username}</p>
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant={"ghost"}
-            className="rounded-full h-8 w-8 p-1"
-            size={"icon"}
-          >
-            <MessageCircleIcon />
-          </Button>
-          <Button
-            variant={"destructive"}
-            className="rounded-full h-8 w-8 p-1"
-            size={"icon"}
-          >
-            <TrashIcon />
-          </Button>
-        </div>
+        <div className="flex gap-2">{leftProps.map((p) => p)}</div>
       </Card>
     )
   );
