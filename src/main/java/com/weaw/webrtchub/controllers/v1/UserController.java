@@ -58,8 +58,9 @@ public class UserController {
     }
 
     @GetMapping("/friends")
-    public ResponseEntity<List<UserFriendsResponseDTO>> getUserFriends(@RequestParam long userId) throws UserNotFoundException, FriendShipAlreadyExistException {
-        return ResponseEntity.ok(userService.getUserFriends(userId).stream().map(UserFriendsResponseDTO::new).toList());
+    public ResponseEntity<List<UserFriendsResponseDTO>> getUserFriends(HttpServletRequest request) throws UserNotFoundException {
+        String token = request.getAttribute("token").toString();
+        return ResponseEntity.ok(userService.getUserFriends(token).stream().map(UserFriendsResponseDTO::new).toList());
     }
 
 }

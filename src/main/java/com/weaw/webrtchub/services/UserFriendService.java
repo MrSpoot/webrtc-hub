@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserFriendService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserFriendService.class);
@@ -30,6 +32,10 @@ public class UserFriendService {
 
     public UserFriends findById(long id) throws FriendRequestNotFoundException {
         return userFriendRepository.findById(id).orElseThrow(() -> new FriendRequestNotFoundException(id));
+    }
+
+    public List<UserFriends> findAllByUserId(long id) throws FriendRequestNotFoundException {
+        return userFriendRepository.findUserFriendsByUserId(id);
     }
 
     public UserFriends save(UserFriends userFriends) {

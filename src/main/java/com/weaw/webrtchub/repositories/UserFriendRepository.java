@@ -15,4 +15,7 @@ public interface UserFriendRepository extends JpaRepository<UserFriends, Long> {
             "or (uf.user = :friend and uf.friend = :user)")
     List<UserFriends> findFriendsShipAlreadyExist(User user, User friend);
 
+    @Query("SELECT uf FROM UserFriends uf WHERE (uf.user.id = :userId or uf.friend.id = :userId)")
+    List<UserFriends> findUserFriendsByUserId(Long userId);
+
 }

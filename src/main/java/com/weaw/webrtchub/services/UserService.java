@@ -111,8 +111,8 @@ public class UserService {
         throw new WrongCredentialsException();
     }
 
-    public List<UserFriends> getUserFriends(long userId) throws UserNotFoundException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        return user.getFriends();
+    public List<UserFriends> getUserFriends(String token) throws UserNotFoundException {
+        long userId = AuthenticationUtils.extractUserId(token);
+        return userFriendService.findAllByUserId(userId);
     }
 }

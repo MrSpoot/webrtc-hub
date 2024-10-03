@@ -6,7 +6,7 @@ import AppProviders from "../provider/AppProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Discord-like Messenger",
+  title: "Weaw",
   description: "Une application de messagerie instantanée",
 };
 

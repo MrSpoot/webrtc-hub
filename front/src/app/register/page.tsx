@@ -177,14 +177,24 @@ export default function RegisterPage() {
           <div className="flex w-full">
             <div className="flex w-1/2">
               {formStep > 0 && (
-                <Button variant="secondary" size={"icon"} onClick={prevStep}>
+                <Button
+                  variant="secondary"
+                  className="gap-2"
+                  onClick={prevStep}
+                >
                   <ArrowLeft className="h-4 w-4" />
+                  Previous
                 </Button>
               )}
             </div>
             <div className="flex flex-row-reverse w-1/2">
               {formStep == 0 ? (
-                <Button variant="secondary" size={"icon"} onClick={nextStep}>
+                <Button
+                  variant="secondary"
+                  className="gap-2"
+                  onClick={nextStep}
+                >
+                  Next
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               ) : (

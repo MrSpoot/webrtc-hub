@@ -23,9 +23,9 @@ export const getUserInfo = (email?: string): Promise<Profile> => {
     });
 };
 
-export const getUserFriends = (id: number): Promise<UserFriend[]> => {
+export const getUserFriends = (): Promise<UserFriend[]> => {
   return api
-    .get(`/users/friends?userId=${id}`)
+    .get(`/users/friends`)
     .then((response) => response.data)
     .catch((error) => {
       throw error;
