@@ -9,6 +9,7 @@ import {
   PaperPlaneIcon,
   PlusIcon,
 } from "@radix-ui/react-icons";
+import { HeadphonesIcon, MicIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { logout } from "../services";
@@ -71,7 +72,13 @@ export default function BottomBar() {
           <AvatarWithBadge size="xs" />
           <p className="font-semibold">{user?.username}</p>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center gap-1">
+          <Button variant={"ghost"} className="rounded-full" size={"icon"}>
+            <MicIcon className="h-6 w-6" />
+          </Button>
+          <Button variant={"ghost"} className="rounded-full" size={"icon"}>
+            <HeadphonesIcon className="h-6 w-6" />
+          </Button>
           <Button variant={"ghost"} className="rounded-full" size={"icon"}>
             <GearIcon className="h-6 w-6" />
           </Button>

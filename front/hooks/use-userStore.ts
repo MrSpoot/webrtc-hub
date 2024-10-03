@@ -5,7 +5,7 @@ interface User {
   id: number;
   username: string;
   email: string;
-  friends: UserFriend[];
+  friends: UserFriend[] | undefined;
 }
 
 interface UserStore {
@@ -18,18 +18,18 @@ interface UserStore {
 
 export const useUserStore = create<UserStore>((set) => ({
   user: null,
-  setUser: (user) => set({ user: { ...user, friends: user.friends || [] } }),
+  setUser: (user) => set({ user: { ...user } }),
   clearUser: () => set({ user: null }),
   addFriend: (newFriend) =>
     set((state) => {
       if (!state.user) return state;
-      const updatedFriends = [...state.user.friends, newFriend];
+      const updatedFriends = [...(state.user.friends ?? []), newFriend];
       return { user: { ...state.user, friends: updatedFriends } };
     }),
   addFriends: (newFriends) =>
     set((state) => {
       if (!state.user) return state;
-      const updatedFriends = [...state.user.friends, ...newFriends];
+      const updatedFriends = [...(state.user.friends ?? []), ...newFriends];
       return { user: { ...state.user, friends: updatedFriends } };
     }),
 }));

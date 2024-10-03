@@ -12,13 +12,14 @@ export default function FriendsList() {
   const [addingFriendOpen, setAddingFriendOpen] = useState(false);
 
   useEffect(() => {
-    if (user) {
+    if (user && !!!user.friends) {
       getUserFriends(user.id)
         .then((friends) => {
           addFriends(friends);
         })
         .catch(() => {});
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -34,16 +35,13 @@ export default function FriendsList() {
           <p>Add friends</p>
         </Button>
         <div className="w-full flex flex-col gap-1 overflow-y-scroll">
-          {user?.friends.map((f) =>
+          {user?.friends?.map((f) =>
             f.friend.id === user.id ? (
               <UserCard key={f.user.id} user={f.user} />
             ) : (
               <UserCard key={f.friend.id} user={f.friend} />
             )
           )}
-          <UserCard />
-          <UserCard />
-          <UserCard />
         </div>
       </div>
       <AddingFriendModal
