@@ -5,7 +5,6 @@ import com.weaw.webrtchub.exceptions.UserNotFoundException;
 import com.weaw.webrtchub.exceptions.WrongCredentialsException;
 import com.weaw.webrtchub.models.User;
 import com.weaw.webrtchub.models.UserFriends;
-import com.weaw.webrtchub.models.payloads.Message;
 import com.weaw.webrtchub.models.projections.Profile;
 import com.weaw.webrtchub.models.websocket.models.FriendRequest;
 import com.weaw.webrtchub.repositories.UserRepository;

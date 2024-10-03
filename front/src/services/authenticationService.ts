@@ -22,21 +22,13 @@ export interface AuthResponse {
 }
 
 export const login = (data: LoginData): Promise<AuthResponse> => {
-  return api
-    .post("/auth/signin", data)
-    .then((response) => response.data)
-    .catch((error) => {
-      throw error;
-    });
+  return api.post("/auth/signin", data).then((r) => r.data);
 };
 
 export const loginWithToken = (data: string): Promise<AuthResponse> => {
   return api
     .post(`/auth/signin/token?token=${data}`, data)
-    .then((response) => response.data)
-    .catch((error) => {
-      throw error;
-    });
+    .then((response) => response.data);
 };
 
 export const register = (data: RegisterData): Promise<string> => {

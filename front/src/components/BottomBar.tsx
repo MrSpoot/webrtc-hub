@@ -12,7 +12,7 @@ import {
 import { HeadphonesIcon, MicIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { logout } from "../services";
+import { useLogout } from "../services/queries/auth-queries";
 import AvatarWithBadge from "./AvatarWithBadge";
 
 export default function BottomBar() {
@@ -21,12 +21,15 @@ export default function BottomBar() {
 
   const router = useRouter();
 
-  const handleLogout = async () => {
-    logout()
-      .catch(() => {})
-      .finally(() => {
+  const useLogoutMutation = useLogout();
+
+  const handleLogout = async (e: React.FormEvent) => {
+    e.preventDefault();
+    useLogoutMutation.mutate(undefined, {
+      onSuccess: () => {
         router.replace("/login");
-      });
+      },
+    });
   };
 
   const handleSubmit = async () => {

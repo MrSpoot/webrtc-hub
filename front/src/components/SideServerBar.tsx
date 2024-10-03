@@ -8,7 +8,7 @@ const servers = [
 
 export default function SideServerBar() {
   return (
-    <div className=" bg-card text-white h-screen p-2">
+    <div className=" bg-card text-white p-2">
       <div className="flex flex-col gap-2">
         {servers.map((s) => {
           return (

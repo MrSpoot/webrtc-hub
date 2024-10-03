@@ -1,4 +1,4 @@
-package com.weaw.webrtchub.models.payloads;
+package com.weaw.webrtchub.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +18,13 @@ public class Message {
     private String message;
     private long senderId;
     private long createdAt = System.currentTimeMillis();
+
+    public Message(String recipientId, String message, long senderId) {
+        this.recipientId = recipientId;
+        this.message = message;
+        this.senderId = senderId;
+        this.createdAt = System.currentTimeMillis();
+    }
 
     @Override
     public String toString(){

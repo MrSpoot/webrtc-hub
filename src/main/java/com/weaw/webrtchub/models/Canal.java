@@ -1,7 +1,6 @@
 package com.weaw.webrtchub.models;
 
 import com.weaw.webrtchub.models.dtos.CanalCreationDTO;
-import com.weaw.webrtchub.models.payloads.Message;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,12 +21,9 @@ public class Canal {
     private String id;
     private String name;
     private List<Long> users;
-    @DBRef
-    private List<Message> messages;
 
     public Canal(CanalCreationDTO canalCreationDTO) {
         this.name = canalCreationDTO.getName();
         this.users = canalCreationDTO.getUsers();
-        this.messages = new ArrayList<>();
     }
 }

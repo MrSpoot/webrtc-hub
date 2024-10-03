@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LoadingButton } from "@/components/ui/loading-button";
-import { register } from "@/src/services";
+import { useRegister } from "@/src/services/queries/auth-queries";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -27,17 +27,20 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
+  const useRegisterMutation = useRegister();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    register({ username, password, email, firstname, lastname })
-      .then(() => {
-        router.push("/login");
-      })
-      .finally(() => setLoading(false));
+    useRegisterMutation.mutate(
+      { username, password, email, firstname, lastname },
+      {
+        onSuccess: () => {
+          router.push("/login");
+        },
+      }
+    );
   };
 
   // Gérer le passage à l'étape suivante
@@ -174,21 +177,24 @@ export default function RegisterPage() {
           <div className="flex w-full">
             <div className="flex w-1/2">
               {formStep > 0 && (
-                <Button variant="default" size={"icon"} onClick={prevStep}>
+                <Button variant="secondary" size={"icon"} onClick={prevStep}>
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
               )}
             </div>
             <div className="flex flex-row-reverse w-1/2">
               {formStep == 0 ? (
-                <Button variant="default" size={"icon"} onClick={nextStep}>
+                <Button variant="secondary" size={"icon"} onClick={nextStep}>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               ) : (
                 <LoadingButton
                   type="submit"
-                  disabled={loading || !samePassword(password, confirmPassword)}
-                  loading={loading}
+                  disabled={
+                    useRegisterMutation.isPending ||
+                    !samePassword(password, confirmPassword)
+                  }
+                  loading={useRegisterMutation.isPending}
                   onClick={handleSubmit}
                 >
                   <div className="flex items-center gap-2">
@@ -204,7 +210,7 @@ export default function RegisterPage() {
           <CardDescription>
             Already an account ?{" "}
             <a
-              className="text-primary hover:text-primary/60"
+              className="text-primary hover:text-primary/60 cursor-pointer"
               onClick={() => router.push("/login")}
             >
               Sign In

@@ -12,34 +12,35 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/hooks/use-userStore";
-import { login } from "@/src/services";
+import { AuthResponse } from "@/src/services";
+import { useLogin } from "@/src/services/queries/auth-queries";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginPage() {
+  const { setUser } = useUserStore();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { user, setUser } = useUserStore();
 
   const router = useRouter();
+  const useLoginMutation = useLogin();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    login({ username, password })
-      .then((d) => {
-        setUser({
-          id: d.user.id,
-          username: d.user.username,
-          email: d.user.email,
-          friends: undefined,
-        });
-      })
-      .catch(() => {})
-      .finally(() => {
-        router.push("/app");
-      });
+    useLoginMutation.mutate(
+      { username, password },
+      {
+        onSuccess: (response: AuthResponse) => {
+          setUser({
+            id: response.user.id,
+            username: response.user.username,
+            email: response.user.email,
+            friends: undefined,
+          });
+          router.push("/app");
+        },
+      }
+    );
   };
 
   return (
@@ -82,14 +83,14 @@ export default function LoginPage() {
             className="w-full"
             type="submit"
             onClick={handleSubmit}
-            disabled={loading}
+            disabled={useLoginMutation.isPending}
           >
             Sign In
           </Button>
           <CardDescription>
             No account ?{" "}
             <a
-              className="text-primary hover:text-primary/60"
+              className="text-primary hover:text-primary/60 cursor-pointer"
               onClick={() => router.push("/register")}
             >
               Sign Up

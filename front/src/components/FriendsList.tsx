@@ -24,7 +24,7 @@ export default function FriendsList() {
 
   return (
     <>
-      <div className="flex flex-col text-white h-screen p-2  items-center gap-4">
+      <div className="flex flex-col text-white h-full p-2  items-center gap-4">
         <Button
           className="gap-2"
           onClick={() => {
