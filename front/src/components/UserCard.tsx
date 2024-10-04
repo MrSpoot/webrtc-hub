@@ -13,8 +13,8 @@ export default function UserCard({
 }: UserCardProps) {
   return (
     user && (
-      <Card className="flex  items-center  p-2">
-        <div className="flex gap-2 items-center bg-card flex-1">
+      <Card className="flex  items-center  p-4">
+        <div className="flex gap-2 items-center flex-1">
           <AvatarWithBadge size="xs" />
           <p className="text-md font-semibold">{user?.username}</p>
         </div>

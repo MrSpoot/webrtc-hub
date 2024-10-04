@@ -1,8 +1,10 @@
 import { SpinningLoader } from "@/components/spinning-loader";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/hooks/use-userStore";
-import { Check, MessageCircleIcon, TrashIcon, X } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Check, Clock, MessageCircleIcon, TrashIcon, X } from "lucide-react";
 import { useState } from "react";
+import { reponseToFriendRequest, UserFriend } from "../services";
 import { useFriendsList } from "../services/queries/user-queries";
 import AddingFriendModal from "./AddingFriendModal";
 import UserCard from "./UserCard";
@@ -13,8 +15,39 @@ export default function FriendsList() {
   const { user } = useUserStore();
   const [selectTab, setSelectTab] = useState<LIST_TYPE>("FRIENDS");
 
+  const queryClient = useQueryClient();
   const [addingFriendOpen, setAddingFriendOpen] = useState(false);
   const { data: friends, isLoading } = useFriendsList();
+
+  const handleResponseToFriendsRequest = (id: number, valid: boolean) => {
+    reponseToFriendRequest(id, valid)
+      .then((uf) => {
+        if (uf.accepted) {
+          queryClient.setQueryData(
+            ["friends-list"],
+            (state: UserFriend[] | undefined) => {
+              if (state) {
+                return state.map((friend) =>
+                  friend.id === uf.id ? { ...friend, ...uf } : friend
+                );
+              }
+              return [uf];
+            }
+          );
+        } else {
+          queryClient.setQueryData(
+            ["friends-list"],
+            (state: UserFriend[] | undefined) => {
+              if (state) {
+                return state.filter((friend) => friend.id !== uf.id); // Supprime l'élément avec _friend.id
+              }
+              return [];
+            }
+          );
+        }
+      })
+      .catch(() => {});
+  };
 
   return (
     <>
@@ -100,23 +133,46 @@ export default function FriendsList() {
                   <UserCard
                     key={f.friend.id === user.id ? f.user.id : f.friend.id}
                     user={f.friend.id === user.id ? f.user : f.friend}
-                    leftProps={[
-                      <Button
-                        key={"message-button"}
-                        className="rounded-full h-6 w-6 p-1"
-                        size={"icon"}
-                      >
-                        <Check />
-                      </Button>,
-                      <Button
-                        key={"trash-button"}
-                        variant={"destructive"}
-                        className="rounded-full h-6 w-6 p-1"
-                        size={"icon"}
-                      >
-                        <X />
-                      </Button>,
-                    ]}
+                    leftProps={
+                      user.id === f.friend.id
+                        ? [
+                            <Button
+                              key={"check-button"}
+                              className="rounded-full h-6 w-6 p-1"
+                              size={"icon"}
+                              onClick={() =>
+                                handleResponseToFriendsRequest(f.id, true)
+                              }
+                            >
+                              <Check />
+                            </Button>,
+                            <Button
+                              key={"cross-button"}
+                              variant={"destructive"}
+                              className="rounded-full h-6 w-6 p-1"
+                              size={"icon"}
+                              onClick={() =>
+                                handleResponseToFriendsRequest(f.id, false)
+                              }
+                            >
+                              <X />
+                            </Button>,
+                          ]
+                        : [
+                            <Button
+                              key={"clock-button"}
+                              variant={"destructive"}
+                              className="rounded-full h-6 w-6 p-1"
+                              size={"icon"}
+                              disabled
+                              onClick={() =>
+                                handleResponseToFriendsRequest(f.id, false)
+                              }
+                            >
+                              <Clock />
+                            </Button>,
+                          ]
+                    }
                   />
                 ))
             )}

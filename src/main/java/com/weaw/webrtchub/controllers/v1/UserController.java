@@ -39,6 +39,16 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserProfile(email));
     }
 
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<Profile> getUserProfileById(@PathVariable Long id) throws UserNotFoundException {
+        return ResponseEntity.ok(userService.getUserProfileById(id));
+    }
+
+    @PostMapping("/profiles/by-ids")
+    public ResponseEntity<List<Profile>> getUserProfilesByIds(@RequestBody List<Long> ids) {
+        return ResponseEntity.ok(userService.getUserProfiles(ids));
+    }
+
     @PostMapping("/friends")
     public ResponseEntity<UserFriendsResponseDTO> addFriend(@RequestParam long friendId, HttpServletRequest request) throws UserNotFoundException, FriendShipAlreadyExistException {
         String token = request.getAttribute("token").toString();

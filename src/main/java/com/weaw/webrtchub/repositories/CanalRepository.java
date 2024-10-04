@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CanalRepository extends MongoRepository<Canal, String> {
 
-    Page<Canal> findAllByUsersContaining(long userId, Pageable pageable);
+    Page<Canal> findAllByUsersContainingAndIsPrivateCanalTrue(long userId, Pageable pageable);
 
 }

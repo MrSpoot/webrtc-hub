@@ -1,10 +1,28 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { addNewFriend, getUserFriends, getUserInfo } from "../userService";
+import {
+  addNewFriend,
+  getUserFriends,
+  getUserInfo,
+  getUserProfile,
+  getUserProfilesById,
+} from "../user-service";
 
 export const useFriendsList = () =>
   useQuery({
     queryKey: ["friends-list"],
     queryFn: () => getUserFriends(),
+  });
+
+export const useCanalProfilesList = (canalId: string, ids: number[]) =>
+  useQuery({
+    queryKey: [`canal-${canalId}-profiles-list`],
+    queryFn: () => getUserProfilesById(ids),
+  });
+
+export const useProfile = (id: number) =>
+  useQuery({
+    queryKey: [`profile-${id}`],
+    queryFn: () => getUserProfile(id),
   });
 
 export const useGetProfile = (email: string, callOnRender?: boolean) => {

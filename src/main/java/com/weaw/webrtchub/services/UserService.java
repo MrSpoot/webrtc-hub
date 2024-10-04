@@ -36,6 +36,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public List<User> getUsersByIds(List<Long> ids) {
+        return userRepository.findAllById(ids);
+    }
+
     public User getUserByUsername(String email) {
         return userRepository.findByUsername(email);
     }
@@ -55,6 +59,16 @@ public class UserService {
         } else {
             return null;
         }
+    }
+
+    public Profile getUserProfileById(Long id) throws UserNotFoundException {
+        User user = getUserById(id);
+        return new Profile(user);
+    }
+
+    public List<Profile> getUserProfiles(List<Long> ids) {
+        List<User> users = getUsersByIds(ids);
+        return users.stream().map(Profile::new).toList();
     }
 
     @Transactional
@@ -82,10 +96,10 @@ public class UserService {
         long userId = AuthenticationUtils.extractUserId(token);
         UserFriends userFriends = userFriendService.findById(id);
 
-        if(userFriends.getUser().getId() == userId || userFriends.getFriend().getId() == userId ){
+        if (userFriends.getUser().getId() == userId || userFriends.getFriend().getId() == userId) {
             userFriendService.delete(id);
             return userFriends.getId();
-        }else{
+        } else {
             throw new WrongCredentialsException();
         }
     }
@@ -97,7 +111,7 @@ public class UserService {
         UserFriends userFriends = userFriendService.findById(requestId);
 
         if (userFriends.getFriend().getId() == userId) {
-            if(!userFriends.isAccepted()){
+            if (!userFriends.isAccepted()) {
                 if (response) {
                     userFriends.setAccepted(true);
                     userFriends = userFriendService.save(userFriends);

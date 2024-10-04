@@ -32,9 +32,39 @@ export const getUserFriends = (): Promise<UserFriend[]> => {
     });
 };
 
+export const getUserProfilesById = (ids: number[]): Promise<Profile[]> => {
+  return api
+    .post(`/users/profiles/by-ids`, ids)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+export const getUserProfile = (id: number): Promise<Profile> => {
+  return api
+    .get(`/users/profile/${id}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
 export const addNewFriend = (friendId?: number): Promise<UserFriend> => {
   return api
     .post(`/users/friends?friendId=${friendId}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+export const reponseToFriendRequest = (
+  id: number,
+  valid: boolean
+): Promise<UserFriend> => {
+  return api
+    .post(`/users/friends/${id}/respond?accepted=${valid}`)
     .then((response) => response.data)
     .catch((error) => {
       throw error;

@@ -27,22 +27,22 @@ public class CanalController {
     @GetMapping()
     public ResponseEntity<Page<Canal>> getAllUserCanal(HttpServletRequest request, Pageable pageable) {
         String token = request.getAttribute("token").toString();
-        return ResponseEntity.ok(canalService.getAllCanalsOfUser(token,pageable));
+        return ResponseEntity.ok(canalService.getAllPrivateCanalsOfUser(token,pageable));
     }
 
-    @GetMapping("{id}/messages")
-    public ResponseEntity<Page<Message>> getAllMessageByCanalId(@RequestParam String id, Pageable pageable) {
+    @GetMapping("/{id}/messages")
+    public ResponseEntity<Page<Message>> getAllMessageByCanalId(@PathVariable String id, Pageable pageable) {
         return ResponseEntity.ok(canalService.getAllMessageByCanalId(id,pageable));
     }
 
-    @PostMapping("{id}/messages")
-    public ResponseEntity<Message> postMessageOnCanal(@RequestParam String id, @RequestBody String message, HttpServletRequest request) {
+    @PostMapping("/{id}/messages")
+    public ResponseEntity<Message> postMessageOnCanal(@PathVariable String id, @RequestBody String message, HttpServletRequest request) {
         String token = request.getAttribute("token").toString();
         return ResponseEntity.ok(canalService.processMessage(id,token,message));
     }
 
     @PostMapping
-    public ResponseEntity<Canal> saveCanal(@RequestBody CanalCreationDTO canal) {
-        return ResponseEntity.ok(canalService.save(canal));
+    public ResponseEntity<Canal> savePrivateCanal(@RequestBody CanalCreationDTO canal) {
+        return ResponseEntity.ok(canalService.savePrivateCanal(canal));
     }
 }

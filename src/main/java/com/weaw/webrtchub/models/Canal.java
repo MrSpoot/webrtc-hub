@@ -21,9 +21,11 @@ public class Canal {
     private String id;
     private String name;
     private List<Long> users;
+    private boolean isPrivateCanal;
 
-    public Canal(CanalCreationDTO canalCreationDTO) {
+    public Canal(CanalCreationDTO canalCreationDTO, boolean isPrivate) {
         this.name = canalCreationDTO.getName();
         this.users = canalCreationDTO.getUsers();
+        this.isPrivateCanal = isPrivate;
     }
 }

@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { Profile } from "./userService";
+import { Profile } from "./user-service";
 
 export interface LoginData {
   username: string;

@@ -5,7 +5,7 @@ import {
   logout,
   register,
   RegisterData,
-} from "../authenticationService";
+} from "../authentication-service";
 
 export const useLogin = () =>
   useMutation({

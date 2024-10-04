@@ -53,20 +53,20 @@ public class CanalService {
         throw new CanalNotFoundException(canalId);
     }
 
-    public Page<Canal> getAllCanalsOfUser(String token, Pageable pageable) {
+    public Page<Canal> getAllPrivateCanalsOfUser(String token, Pageable pageable) {
         long userId = AuthenticationUtils.extractUserId(token);
-        return canalRepository.findAllByUsersContaining(userId,pageable);
+        return canalRepository.findAllByUsersContainingAndIsPrivateCanalTrue(userId,pageable);
     }
 
     public Canal findById(String id) {
         return canalRepository.findById(new ObjectId(id).toString()).orElse(null);
     }
 
-    public Canal save(Canal canal) {
-        return canalRepository.save(canal);
+    public Canal savePrivateCanal(CanalCreationDTO canal) {
+        return canalRepository.save(new Canal(canal,true));
     }
 
-    public Canal save(CanalCreationDTO canal) {
-        return canalRepository.save(new Canal(canal));
+    public Canal saveServerCanal(CanalCreationDTO canal) {
+        return canalRepository.save(new Canal(canal,false));
     }
 }
