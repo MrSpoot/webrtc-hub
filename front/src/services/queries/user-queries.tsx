@@ -1,3 +1,4 @@
+import { useUserStore } from "@/hooks/use-userStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   addNewFriend,
@@ -7,11 +8,14 @@ import {
   getUserProfilesById,
 } from "../user-service";
 
-export const useFriendsList = () =>
-  useQuery({
-    queryKey: ["friends-list"],
+export const useFriendsList = () => {
+  const { user } = useUserStore();
+
+  return useQuery({
+    queryKey: [`${user?.id}-friends-list`],
     queryFn: () => getUserFriends(),
   });
+};
 
 export const useCanalProfilesList = (canalId: string, ids: number[]) =>
   useQuery({

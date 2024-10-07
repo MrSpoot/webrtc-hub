@@ -27,14 +27,14 @@ export default function AppPage() {
 
   return (
     <>
-      <div className="flex h-screen w-screen flex-col-reverse max-h-screen max-w-screen">
+      <div className="flex h-screen w-screen flex-col-reverse overflow-hidden">
         <BottomBar />
-        <div className="flex flex-1 max-h-full">
+        <div className="flex h-full overflow-y-hidden">
           <SideServerBar />
           <div className="h-full w-1/5 bg-[#292929]">
             <PrivateCanalList onCanalSelect={handleCanalChange} />
           </div>
-          <div className="flex flex-1 overflow-y-scroll">
+          <div className="flex flex-1 h-full">
             {canalId !== "" && <MessageList canalId={canalId} />}
           </div>
           <div className="h-full w-1/4 bg-[#292929]">

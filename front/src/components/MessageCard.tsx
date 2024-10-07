@@ -26,7 +26,7 @@ export default function MessageCard({ message }: MessageProps) {
           {format(new Date(message.createdAt), "dd/MM/yyyy HH:mm:ss")}
         </div>
       </div>
-      <div className="pl-12 w-11/12">{message.message}</div>
+      <p className="pl-12 w-11/12 whitespace-pre-line">{message.message}</p>
     </div>
   );
 }

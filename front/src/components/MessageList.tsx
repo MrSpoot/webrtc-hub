@@ -10,7 +10,7 @@ export default function MessageList({ canalId }: MessageListProps) {
 
   return (
     <>
-      <div className="flex flex-1 flex-col-reverse p-4 gap-2">
+      <div className="flex flex-col-reverse p-4 gap-2 overflow-y-auto">
         {messages?.map((m) => (
           <MessageCard key={m.id} message={m} />
         ))}
