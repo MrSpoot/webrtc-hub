@@ -5,12 +5,12 @@ import { useProfile } from "../services/queries/user-queries";
 import AvatarWithBadge from "./AvatarWithBadge";
 
 interface MessageProps {
-  message: Message;
+  messages: Message[];
 }
 
-export default function MessageCard({ message }: MessageProps) {
+export default function MessageCard({ messages }: MessageProps) {
   const { user } = useUserStore();
-  const { data: profile } = useProfile(message.senderId);
+  const { data: profile } = useProfile(messages[0].senderId);
 
   function userOwnMessage() {
     return user && user.id === profile?.id;
@@ -35,39 +35,23 @@ export default function MessageCard({ message }: MessageProps) {
             </div>
 
             <div className="text-xs text-gray-400">
-              {format(new Date(message.createdAt), "HH:mm")}
+              {format(new Date(messages[0].createdAt), "HH:mm")}
             </div>
           </div>
 
           <div
-            className={`flex w-full rounded-b-lg px-2 py-4 whitespace-pre-line ${
+            className={`flex flex-col w-full rounded-b-lg px-2 py-4 whitespace-pre-line gap-4 ${
               userOwnMessage()
                 ? "bg-blue-400 rounded-l-lg "
                 : "bg-card rounded-r-lg"
             }`}
           >
-            {message.message}
+            {messages.map((m) => (
+              <p key={m.id}>{m.message}</p>
+            ))}
           </div>
         </div>
       </div>
     )
-
-    // <div className="flex flex-col text-white w-full bg-card p-4 gap-2 rounded-xl">
-    //   <div className="flex items-center gap-2">
-    //     <Avatar className=" rounded-full">
-    //       <AvatarImage
-    //         src="https://github.com/shadcn.png"
-    //         className="rounded-full w-10 h-10"
-    //         alt="@shadcn"
-    //       />
-    //       <AvatarFallback />
-    //     </Avatar>
-    //     <p className=" font-semibold">{profile?.username}</p>
-    //     <div className="text-xs w-full text-gray-400">
-    //       {format(new Date(message.createdAt), "dd/MM/yyyy HH:mm:ss")}
-    //     </div>
-    //   </div>
-    //   <p className="pl-12 w-11/12 whitespace-pre-line">{message.message}</p>
-    // </div>
   );
 }
