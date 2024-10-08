@@ -33,3 +33,15 @@ export const getPrivateMessages = (canalId: string): Promise<Message[]> => {
       throw error;
     });
 };
+
+export const sendMessageToCanal = (
+  canalId: string,
+  message: string
+): Promise<Message[]> => {
+  return api
+    .post(`/canals/${canalId}/messages`, message)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error;
+    });
+};

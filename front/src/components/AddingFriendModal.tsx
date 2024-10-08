@@ -61,7 +61,7 @@ export default function AddingFriendModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] bg-card border-none">
         <DialogTrigger />
         <DialogHeader>
           <DialogTitle>Add new friends</DialogTitle>
