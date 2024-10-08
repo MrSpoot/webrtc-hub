@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 export default function AppPage() {
   const { user } = useUserStore();
   const router = useRouter();
-  const [canalId, setCanalId] = useState("");
+  const [canalId, setCanalId] = useState<string | undefined>();
 
   useEffect(() => {
     if (!user) {
@@ -28,14 +28,14 @@ export default function AppPage() {
   return (
     <>
       <div className="flex h-screen w-screen flex-col-reverse overflow-hidden">
-        <BottomBar />
+        <BottomBar canalId={canalId} />
         <div className="flex h-full overflow-y-hidden">
           <SideServerBar />
           <div className="h-full w-1/5 bg-[#292929]">
             <PrivateCanalList onCanalSelect={handleCanalChange} />
           </div>
           <div className="flex flex-1 h-full">
-            {canalId !== "" && <MessageList canalId={canalId} />}
+            {canalId && <MessageList canalId={canalId} />}
           </div>
           <div className="h-full w-1/4 bg-[#292929]">
             <FriendsList />

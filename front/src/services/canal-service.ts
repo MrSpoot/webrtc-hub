@@ -39,7 +39,11 @@ export const sendMessageToCanal = (
   message: string
 ): Promise<Message[]> => {
   return api
-    .post(`/canals/${canalId}/messages`, message)
+    .post(`/canals/${canalId}/messages`, message, {
+      headers: {
+        "Content-Type": "text/plain",
+      },
+    })
     .then((response) => response.data)
     .catch((error) => {
       throw error;

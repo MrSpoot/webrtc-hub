@@ -12,10 +12,15 @@ import {
 import { HeadphonesIcon, MicIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { sendMessageToCanal } from "../services/canal-service";
 import { useLogout } from "../services/queries/auth-queries";
 import AvatarWithBadge from "./AvatarWithBadge";
 
-export default function BottomBar() {
+interface BottomBarProps {
+  canalId?: string;
+}
+
+export default function BottomBar({ canalId }: BottomBarProps) {
   const [message, setMessage] = useState("");
   const { user } = useUserStore();
 
@@ -33,9 +38,13 @@ export default function BottomBar() {
   };
 
   const handleSubmit = async () => {
-    console.log(message);
-    if (message === "") {
-      setMessage("");
+    if (canalId && message !== "") {
+      sendMessageToCanal(canalId, message)
+        .then((m) => {
+          console.log(m);
+          setMessage("");
+        })
+        .catch(() => {});
     }
   };
 

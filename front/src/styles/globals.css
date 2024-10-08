@@ -26,6 +26,38 @@ body {
   }
 }
 
+/* Chrome, Safari et Edge */
+::-webkit-scrollbar {
+  width: 8px; /* Largeur de la scrollbar */
+  height: 8px; /* Hauteur de la scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Piste de défilement transparente */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Couleur du bouton de défilement */
+  border-radius: 10px; /* Bordures arrondies */
+  border: 2px solid transparent; /* Un peu d'espace autour du bouton */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Couleur au survol */
+}
+
+/* Supprimer les boutons de défilement */
+::-webkit-scrollbar-button {
+  display: none; /* Masque les boutons de défilement */
+}
+
+
+/* Firefox */
+* {
+  scrollbar-width: thin; /* Utiliser une scrollbar fine */
+  scrollbar-color: #888 #f1f1f1; /* Couleur du bouton et arrière-plan */
+}
+
 @layer base {
   :root {
     --background: 0 0% 10%;
