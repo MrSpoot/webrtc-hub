@@ -12,8 +12,8 @@ export default function PrivateCanalList({
   const { data: canals, isLoading } = usePrivateCanal();
 
   return (
-    <div className="flex flex-col text-white h-full p-2 gap-1 items-center">
-      <div className="w-full flex flex-col gap-1 overflow-y-scroll justify-center">
+    <div className="flex flex-col text-white p-2 gap-1 items-center">
+      <div className="w-full flex flex-col gap-1 justify-center">
         {isLoading ? (
           <SpinningLoader />
         ) : (

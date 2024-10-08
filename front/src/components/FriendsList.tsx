@@ -85,7 +85,7 @@ export default function FriendsList() {
         </div>
 
         {selectTab === "FRIENDS" && (
-          <div className="w-full flex flex-col gap-1 overflow-y-scroll justify-center">
+          <div className="w-full flex flex-col gap-1 overflow-y-auto justify-center">
             {isLoading ? (
               <SpinningLoader />
             ) : (
