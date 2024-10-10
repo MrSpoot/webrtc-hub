@@ -1,8 +1,8 @@
-import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { Message } from "../services/canal-service";
 import { usePrivateMessageList } from "../services/queries/canal-queries";
 import MessageCard from "./MessageCard";
+import { Separator } from "./ui/separator";
 
 interface MessageListProps {
   canalId: string;

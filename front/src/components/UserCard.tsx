@@ -1,6 +1,6 @@
-import { Card } from "@/components/ui/card";
 import { Profile } from "../services";
 import AvatarWithBadge from "./AvatarWithBadge";
+import { Card } from "./ui/card";
 
 interface UserCardProps {
   user?: Profile;

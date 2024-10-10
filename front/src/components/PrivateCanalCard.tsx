@@ -1,8 +1,8 @@
-import { Card } from "@/components/ui/card";
-import { useUserStore } from "@/hooks/use-userStore";
+import { useUserStore } from "../hooks/use-userStore";
 import { PrivateCanal } from "../services/canal-service";
 import { useCanalProfilesList } from "../services/queries/user-queries";
 import AvatarWithBadge from "./AvatarWithBadge";
+import { Card } from "./ui/card";
 
 interface CanalCardProps {
   canal: PrivateCanal;

@@ -1,7 +1,8 @@
-/* eslint-disable react/no-unescaped-entities */
-"use client";
-
-import { Button } from "@/components/ui/button";
+import { Label } from "@radix-ui/react-label";
+import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,14 +10,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { LoadingButton } from "@/components/ui/loading-button";
-import { useRegister } from "@/src/services/queries/auth-queries";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { LoadingButton } from "../components/ui/loading-button";
+import { useRegister } from "../services/queries/auth-queries";
 
 export default function RegisterPage() {
   const [formStep, setFormStep] = useState(0); // État pour l'étape actuelle
@@ -28,7 +25,7 @@ export default function RegisterPage() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
 
-  const router = useRouter();
+  const navigate = useNavigate();
   const useRegisterMutation = useRegister();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,7 +34,7 @@ export default function RegisterPage() {
       { username, password, email, firstname, lastname },
       {
         onSuccess: () => {
-          router.push("/login");
+          navigate("/login");
         },
       }
     );
@@ -221,7 +218,7 @@ export default function RegisterPage() {
             Already an account ?{" "}
             <a
               className="text-primary hover:text-primary/60 cursor-pointer"
-              onClick={() => router.push("/login")}
+              onClick={() => navigate("/login")}
             >
               Sign In
             </a>

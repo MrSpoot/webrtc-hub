@@ -1,8 +1,3 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useUserStore } from "@/hooks/use-userStore";
 import {
   ExitIcon,
   GearIcon,
@@ -10,11 +5,14 @@ import {
   PlusIcon,
 } from "@radix-ui/react-icons";
 import { HeadphonesIcon, MicIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../hooks/use-userStore";
 import { sendMessageToCanal } from "../services/canal-service";
 import { useLogout } from "../services/queries/auth-queries";
 import AvatarWithBadge from "./AvatarWithBadge";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 interface BottomBarProps {
   canalId?: string;
@@ -24,7 +22,7 @@ export default function BottomBar({ canalId }: BottomBarProps) {
   const [message, setMessage] = useState("");
   const { user } = useUserStore();
 
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const useLogoutMutation = useLogout();
 
@@ -32,7 +30,7 @@ export default function BottomBar({ canalId }: BottomBarProps) {
     e.preventDefault();
     useLogoutMutation.mutate(undefined, {
       onSuccess: () => {
-        router.replace("/login");
+        navigate("/login");
       },
     });
   };

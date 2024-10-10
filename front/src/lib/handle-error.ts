@@ -16,6 +16,11 @@ export const handleHttpError = (
     switch (error.response.status) {
       case 401:
         //window.location.href = "/login";
+        toast({
+          itemID: "error",
+          title: error.response.data.message,
+          variant: "error",
+        });
         break;
       case 403:
       case 409:

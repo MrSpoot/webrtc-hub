@@ -1,12 +1,12 @@
-import { SpinningLoader } from "@/components/spinning-loader";
-import { Button } from "@/components/ui/button";
-import { useUserStore } from "@/hooks/use-userStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { Check, Clock, MessageCircleIcon, TrashIcon, X } from "lucide-react";
 import { useState } from "react";
+import { useUserStore } from "../hooks/use-userStore";
 import { reponseToFriendRequest, UserFriend } from "../services";
 import { useFriendsList } from "../services/queries/user-queries";
 import AddingFriendModal from "./AddingFriendModal";
+import { SpinningLoader } from "./spinning-loader";
+import { Button } from "./ui/button";
 import UserCard from "./UserCard";
 
 type LIST_TYPE = "REQUEST" | "FRIENDS";
@@ -128,7 +128,7 @@ export default function FriendsList() {
               user &&
               friends &&
               friends
-                .filter((f) => !!!f.accepted)
+                .filter((f) => !f.accepted)
                 .map((f) => (
                   <UserCard
                     key={f.friend.id === user.id ? f.user.id : f.friend.id}

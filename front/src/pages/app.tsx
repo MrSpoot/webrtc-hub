@@ -1,22 +1,20 @@
-"use client";
-
-import { useUserStore } from "@/hooks/use-userStore";
-import BottomBar from "@/src/components/BottomBar";
-import FriendsList from "@/src/components/FriendsList";
-import MessageList from "@/src/components/MessageList";
-import PrivateCanalList from "@/src/components/PrivateCanalList";
-import SideServerBar from "@/src/components/SideServerBar";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import BottomBar from "../components/BottomBar";
+import FriendsList from "../components/FriendsList";
+import MessageList from "../components/MessageList";
+import PrivateCanalList from "../components/PrivateCanalList";
+import SideServerBar from "../components/SideServerBar";
+import { useUserStore } from "../hooks/use-userStore";
 
 export default function AppPage() {
   const { user } = useUserStore();
-  const router = useRouter();
+  const navigate = useNavigate();
   const [canalId, setCanalId] = useState<string | undefined>();
 
   useEffect(() => {
     if (!user) {
-      router.replace("/login");
+      navigate("/login");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -1,6 +1,6 @@
-import { useUserStore } from "@/hooks/use-userStore";
-import { Message } from "@/src/services/canal-service";
 import { format } from "date-fns";
+import { useUserStore } from "../hooks/use-userStore";
+import { Message } from "../services/canal-service";
 import { useProfile } from "../services/queries/user-queries";
 import AvatarWithBadge from "./AvatarWithBadge";
 

@@ -1,6 +1,6 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,21 +8,19 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useUserStore } from "@/hooks/use-userStore";
-import { AuthResponse } from "@/src/services";
-import { useLogin } from "@/src/services/queries/auth-queries";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { useUserStore } from "../hooks/use-userStore";
+import { AuthResponse } from "../services";
+import { useLogin } from "../services/queries/auth-queries";
 
 export default function LoginPage() {
   const { setUser } = useUserStore();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const router = useRouter();
+  const navigate = useNavigate();
   const useLoginMutation = useLogin();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,9 +33,8 @@ export default function LoginPage() {
             id: response.user.id,
             username: response.user.username,
             email: response.user.email,
-            friends: undefined,
           });
-          router.push("/app");
+          navigate("/app");
         },
       }
     );
@@ -91,7 +88,7 @@ export default function LoginPage() {
             No account ?{" "}
             <a
               className="text-primary hover:text-primary/60 cursor-pointer"
-              onClick={() => router.push("/register")}
+              onClick={() => navigate("/register")}
             >
               Sign Up
             </a>

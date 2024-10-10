@@ -1,6 +1,6 @@
-import { SpinningLoader } from "@/components/spinning-loader";
 import { usePrivateCanal } from "../services/queries/canal-queries";
 import PrivateCanalCard from "./PrivateCanalCard";
+import { SpinningLoader } from "./spinning-loader";
 
 interface PrivateCanalListProps {
   onCanalSelect: (id: string) => void;

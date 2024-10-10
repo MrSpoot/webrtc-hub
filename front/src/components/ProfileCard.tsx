@@ -1,5 +1,5 @@
-import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import AvatarWithBadge from "./AvatarWithBadge";
+import { Card, CardFooter, CardHeader } from "./ui/card";
 
 export default function ProfileCard() {
   return (

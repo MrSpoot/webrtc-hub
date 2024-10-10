@@ -1,5 +1,5 @@
-import { useUserStore } from "@/hooks/use-userStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useUserStore } from "../../hooks/use-userStore";
 import {
   addNewFriend,
   getUserFriends,
