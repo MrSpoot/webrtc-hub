@@ -12,27 +12,27 @@ export const useFriendsList = () => {
   const { user } = useUserStore();
 
   return useQuery({
-    queryKey: [`${user?.id}-friends-list`],
+    queryKey: ["friends-list", user?.id],
     queryFn: () => getUserFriends(),
   });
 };
 
 export const useCanalProfilesList = (canalId: string, ids: number[]) =>
   useQuery({
-    queryKey: [`canal-${canalId}-profiles-list`],
+    queryKey: ["canal-profiles-list", canalId],
     queryFn: () => getUserProfilesById(ids),
   });
 
 export const useProfile = (id: number) =>
   useQuery({
-    queryKey: [`profile-${id}`],
+    queryKey: ["profile", id],
     queryFn: () => getUserProfile(id),
   });
 
 export const useGetProfile = (email: string, callOnRender?: boolean) => {
   const _callOnRender = callOnRender ?? true;
   return useQuery({
-    queryKey: ["profile-email"],
+    queryKey: ["profile-email", email],
     queryFn: () => getUserInfo(email),
     staleTime: 5 * 60 * 1000,
     enabled: _callOnRender,

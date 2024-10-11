@@ -14,14 +14,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CanalService {
+public class ChannelService {
 
     private final ChannelRepository channelRepository;
     private final SessionService sessionService;
     private final MessageService messageService;
 
     @Autowired
-    public CanalService(ChannelRepository channelRepository, SessionService sessionService, MessageService messageService) {
+    public ChannelService(ChannelRepository channelRepository, SessionService sessionService, MessageService messageService) {
         this.channelRepository = channelRepository;
         this.sessionService = sessionService;
         this.messageService = messageService;

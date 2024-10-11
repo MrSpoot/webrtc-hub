@@ -9,6 +9,6 @@ export const usePrivateCanal = () =>
 
 export const usePrivateMessageList = (canalId: string) =>
   useQuery({
-    queryKey: ["canal", canalId],
+    queryKey: ["canal-messages", canalId],
     queryFn: () => getPrivateMessages(canalId),
   });

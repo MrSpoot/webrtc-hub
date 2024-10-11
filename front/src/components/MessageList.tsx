@@ -82,8 +82,6 @@ export default function MessageList({ channelId }: MessageListProps) {
 
           return (
             <div key={i}>
-              <MessageCard messages={group} />
-
               {shouldAddSeparator && (
                 <div className="flex w-full justify-center py-4 items-center">
                   <Separator className="w-1/3 bg-gray-400" />
@@ -96,6 +94,7 @@ export default function MessageList({ channelId }: MessageListProps) {
                   <Separator className="w-1/3 bg-gray-400" />
                 </div>
               )}
+              <MessageCard messages={group} />
             </div>
           );
         })}

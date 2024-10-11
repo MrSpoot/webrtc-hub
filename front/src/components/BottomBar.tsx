@@ -4,11 +4,12 @@ import {
   PaperPlaneIcon,
   PlusIcon,
 } from "@radix-ui/react-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { HeadphonesIcon, MicIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "../hooks/use-userStore";
-import { sendMessageToCanal } from "../services/canal-service";
+import { Message, sendMessageToCanal } from "../services/canal-service";
 import { useLogout } from "../services/queries/auth-queries";
 import AvatarWithBadge from "./AvatarWithBadge";
 import { Button } from "./ui/button";
@@ -25,11 +26,15 @@ export default function BottomBar() {
   const navigate = useNavigate();
 
   const useLogoutMutation = useLogout();
+  const queryClient = useQueryClient();
 
   const handleLogout = async (e: React.FormEvent) => {
     e.preventDefault();
     useLogoutMutation.mutate(undefined, {
       onSuccess: () => {
+        navigate("/login");
+      },
+      onError: () => {
         navigate("/login");
       },
     });
@@ -39,8 +44,15 @@ export default function BottomBar() {
     if (channelId && message !== "") {
       sendMessageToCanal(channelId, message)
         .then((m) => {
-          console.log(m);
-          setMessage("");
+          queryClient.setQueryData(
+            ["canal-messages", channelId],
+            (state: Message[]) => {
+              if (state) {
+                return [m, ...state];
+              }
+              return [m];
+            }
+          );
         })
         .catch(() => {});
     }

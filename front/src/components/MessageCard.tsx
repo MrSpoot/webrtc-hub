@@ -40,7 +40,7 @@ export default function MessageCard({ messages }: MessageProps) {
           </div>
 
           <div
-            className={`flex flex-col-reverse w-full rounded-b-lg  gap-4 ${
+            className={`flex flex-col-reverse w-full rounded-b-lg py-4 ${
               userOwnMessage()
                 ? "bg-blue-400 rounded-l-lg "
                 : "bg-card rounded-r-lg"
@@ -49,7 +49,7 @@ export default function MessageCard({ messages }: MessageProps) {
             {messages.map((m) => (
               <div
                 key={m.id}
-                className="flex px-2 py-4 w-full whitespace-pre-line break-words"
+                className="flex px-2 py-1 w-full whitespace-pre-line break-words"
               >
                 {m.message}
               </div>

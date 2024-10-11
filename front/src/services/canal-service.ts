@@ -27,7 +27,7 @@ export const getPrivateCanals = (): Promise<PrivateCanal[]> => {
 //TODO: Make pagination
 export const getPrivateMessages = (canalId: string): Promise<Message[]> => {
   return api
-    .get(`/canals/${canalId}/messages?page=0&size=99&sort=createdAt,desc`)
+    .get(`/canals/${canalId}/messages?page=0&size=50&sort=createdAt,desc`)
     .then((response) => response.data.content)
     .catch((error) => {
       throw error;
