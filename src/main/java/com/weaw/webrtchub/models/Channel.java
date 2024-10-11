@@ -1,21 +1,19 @@
 package com.weaw.webrtchub.models;
 
-import com.weaw.webrtchub.models.dtos.CanalCreationDTO;
+import com.weaw.webrtchub.models.dtos.ChannelCreationDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "canals")
-public class Canal {
+@Document(collection = "channels")
+public class Channel {
 
     @Id
     private String id;
@@ -23,9 +21,9 @@ public class Canal {
     private List<Long> users;
     private boolean isPrivateCanal;
 
-    public Canal(CanalCreationDTO canalCreationDTO, boolean isPrivate) {
-        this.name = canalCreationDTO.getName();
-        this.users = canalCreationDTO.getUsers();
+    public Channel(ChannelCreationDTO channelCreationDTO, boolean isPrivate) {
+        this.name = channelCreationDTO.getName();
+        this.users = channelCreationDTO.getUsers();
         this.isPrivateCanal = isPrivate;
     }
 }

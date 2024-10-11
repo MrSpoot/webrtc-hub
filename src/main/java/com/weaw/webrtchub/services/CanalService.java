@@ -2,39 +2,36 @@ package com.weaw.webrtchub.services;
 
 import com.weaw.webrtchub.exceptions.CanalNotFoundException;
 import com.weaw.webrtchub.exceptions.WrongCredentialsException;
-import com.weaw.webrtchub.models.Canal;
-import com.weaw.webrtchub.models.dtos.CanalCreationDTO;
+import com.weaw.webrtchub.models.Channel;
+import com.weaw.webrtchub.models.dtos.ChannelCreationDTO;
 import com.weaw.webrtchub.models.Message;
-import com.weaw.webrtchub.repositories.CanalRepository;
+import com.weaw.webrtchub.repositories.ChannelRepository;
 import com.weaw.webrtchub.utils.AuthenticationUtils;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.WebSocketSession;
-
-import java.util.List;
 
 @Service
 public class CanalService {
 
-    private final CanalRepository canalRepository;
+    private final ChannelRepository channelRepository;
     private final SessionService sessionService;
     private final MessageService messageService;
 
     @Autowired
-    public CanalService(CanalRepository canalRepository, SessionService sessionService, MessageService messageService) {
-        this.canalRepository = canalRepository;
+    public CanalService(ChannelRepository channelRepository, SessionService sessionService, MessageService messageService) {
+        this.channelRepository = channelRepository;
         this.sessionService = sessionService;
         this.messageService = messageService;
     }
 
     public Message processMessage(String canalId, String senderToken, String message) {
-        Canal canal = findById(canalId);
+        Channel channel = findById(canalId);
         long senderId = AuthenticationUtils.extractUserId(senderToken);
-        if(canal != null) {
-            if(canal.getUsers().contains(senderId)) {
+        if(channel != null) {
+            if(channel.getUsers().contains(senderId)) {
                 Message messageToSend = new Message(canalId,message,senderId);
                 Message m = messageService.save(messageToSend);
                 //TODO send m with websocket
@@ -46,27 +43,27 @@ public class CanalService {
     }
 
     public Page<Message> getAllMessageByCanalId(String canalId, Pageable pageable) {
-        Canal canal = findById(canalId);
-        if(canal != null) {
+        Channel channel = findById(canalId);
+        if(channel != null) {
             return messageService.getAllByCanalId(canalId,pageable);
         }
         throw new CanalNotFoundException(canalId);
     }
 
-    public Page<Canal> getAllPrivateCanalsOfUser(String token, Pageable pageable) {
+    public Page<Channel> getAllPrivateCanalsOfUser(String token, Pageable pageable) {
         long userId = AuthenticationUtils.extractUserId(token);
-        return canalRepository.findAllByUsersContainingAndIsPrivateCanalTrue(userId,pageable);
+        return channelRepository.findAllByUsersContainingAndIsPrivateCanalTrue(userId,pageable);
     }
 
-    public Canal findById(String id) {
-        return canalRepository.findById(new ObjectId(id).toString()).orElse(null);
+    public Channel findById(String id) {
+        return channelRepository.findById(new ObjectId(id).toString()).orElse(null);
     }
 
-    public Canal savePrivateCanal(CanalCreationDTO canal) {
-        return canalRepository.save(new Canal(canal,true));
+    public Channel savePrivateCanal(ChannelCreationDTO canal) {
+        return channelRepository.save(new Channel(canal,true));
     }
 
-    public Canal saveServerCanal(CanalCreationDTO canal) {
-        return canalRepository.save(new Canal(canal,false));
+    public Channel saveServerCanal(ChannelCreationDTO canal) {
+        return channelRepository.save(new Channel(canal,false));
     }
 }

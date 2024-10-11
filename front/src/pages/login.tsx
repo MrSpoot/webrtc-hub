@@ -34,7 +34,7 @@ export default function LoginPage() {
             username: response.user.username,
             email: response.user.email,
           });
-          navigate("/app");
+          navigate("/app/@me");
         },
       }
     );

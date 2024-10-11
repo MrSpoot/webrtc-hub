@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CanalCreationDTO {
+public class ChannelCreationDTO {
 
     private String name;
     private List<Long> users;

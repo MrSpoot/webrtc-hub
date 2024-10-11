@@ -11,10 +11,6 @@ const rootElement = document.getElementById("root");
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <div className="h-screen w-screen bg-red-500">ALLO</div>,
-  },
-  {
     path: "/login",
     element: <LoginPage />,
   },
@@ -23,8 +19,20 @@ const router = createBrowserRouter([
     element: <RegisterPage />,
   },
   {
-    path: "/app",
+    path: "/app/:serverId/:channelId",
     element: <AppPage />,
+  },
+  {
+    path: "/app/:serverId",
+    element: <AppPage />,
+  },
+  {
+    path: "/*",
+    element: (
+      <div className="flex h-screen w-screen justify-center items-center">
+        Not Found
+      </div>
+    ),
   },
 ]);
 

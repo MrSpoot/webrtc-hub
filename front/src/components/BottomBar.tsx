@@ -6,7 +6,7 @@ import {
 } from "@radix-ui/react-icons";
 import { HeadphonesIcon, MicIcon } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUserStore } from "../hooks/use-userStore";
 import { sendMessageToCanal } from "../services/canal-service";
 import { useLogout } from "../services/queries/auth-queries";
@@ -14,14 +14,14 @@ import AvatarWithBadge from "./AvatarWithBadge";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
-interface BottomBarProps {
-  canalId?: string;
-}
-
-export default function BottomBar({ canalId }: BottomBarProps) {
+export default function BottomBar() {
   const [message, setMessage] = useState("");
   const { user } = useUserStore();
 
+  const { serverId, channelId } = useParams<{
+    serverId: string;
+    channelId: string;
+  }>();
   const navigate = useNavigate();
 
   const useLogoutMutation = useLogout();
@@ -36,8 +36,8 @@ export default function BottomBar({ canalId }: BottomBarProps) {
   };
 
   const handleSubmit = async () => {
-    if (canalId && message !== "") {
-      sendMessageToCanal(canalId, message)
+    if (channelId && message !== "") {
+      sendMessageToCanal(channelId, message)
         .then((m) => {
           console.log(m);
           setMessage("");

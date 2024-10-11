@@ -5,11 +5,11 @@ import MessageCard from "./MessageCard";
 import { Separator } from "./ui/separator";
 
 interface MessageListProps {
-  canalId: string;
+  channelId: string;
 }
 
-export default function MessageList({ canalId }: MessageListProps) {
-  const { data: messages } = usePrivateMessageList(canalId);
+export default function MessageList({ channelId }: MessageListProps) {
+  const { data: messages } = usePrivateMessageList(channelId);
 
   function isSameMinute(timestamp1: number, timestamp2: number): boolean {
     const date1 = new Date(timestamp1);
