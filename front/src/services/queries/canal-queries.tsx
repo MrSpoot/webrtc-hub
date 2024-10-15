@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPrivateCanals, getPrivateMessages } from "../canal-service";
+import { getPrivateChannels, getPrivateMessages } from "../canal-service";
 
 export const usePrivateCanal = () =>
   useQuery({
     queryKey: ["private-canal-list"],
-    queryFn: () => getPrivateCanals(),
+    queryFn: () => getPrivateChannels(),
   });
 
 export const usePrivateMessageList = (canalId: string) =>

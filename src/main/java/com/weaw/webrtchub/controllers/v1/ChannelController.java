@@ -3,6 +3,7 @@ package com.weaw.webrtchub.controllers.v1;
 import com.weaw.webrtchub.models.Channel;
 import com.weaw.webrtchub.models.Message;
 import com.weaw.webrtchub.models.dtos.ChannelCreationDTO;
+import com.weaw.webrtchub.models.dtos.ChannelResponseDTO;
 import com.weaw.webrtchub.services.ChannelService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +26,7 @@ public class ChannelController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<Channel>> getAllUserCanal(HttpServletRequest request, Pageable pageable) {
+    public ResponseEntity<Page<ChannelResponseDTO>> getAllUserCanal(HttpServletRequest request, Pageable pageable) {
         String token = request.getAttribute("token").toString();
         return ResponseEntity.ok(channelService.getAllPrivateCanalsOfUser(token,pageable));
     }
@@ -42,7 +43,7 @@ public class ChannelController {
     }
 
     @PostMapping
-    public ResponseEntity<Channel> savePrivateCanal(@RequestBody ChannelCreationDTO canal) {
+    public ResponseEntity<ChannelResponseDTO> savePrivateCanal(@RequestBody ChannelCreationDTO canal) {
         return ResponseEntity.ok(channelService.savePrivateCanal(canal));
     }
 }

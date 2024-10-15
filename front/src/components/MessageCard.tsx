@@ -1,16 +1,22 @@
+import { useProfile } from "@/services/queries/user-queries";
 import { format } from "date-fns";
+import { useState } from "react";
 import { useUserStore } from "../hooks/use-userStore";
-import { Message } from "../services/canal-service";
-import { useProfile } from "../services/queries/user-queries";
+import { Channel, Message } from "../services/canal-service";
 import AvatarWithBadge from "./AvatarWithBadge";
 
 interface MessageProps {
+  channel?: Channel;
   messages: Message[];
 }
 
-export default function MessageCard({ messages }: MessageProps) {
+export default function MessageCard({ channel, messages }: MessageProps) {
   const { user } = useUserStore();
-  const { data: profile } = useProfile(messages[0].senderId);
+  const [profile] = useState(
+    channel
+      ? channel.users.find((u) => u.id == messages[0].senderId)
+      : useProfile(messages[0].senderId).data
+  );
 
   function userOwnMessage() {
     return user && user.id === profile?.id;

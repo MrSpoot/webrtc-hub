@@ -1,6 +1,9 @@
 import { format } from "date-fns";
 import { Message } from "../services/canal-service";
-import { usePrivateMessageList } from "../services/queries/canal-queries";
+import {
+  usePrivateCanal,
+  usePrivateMessageList,
+} from "../services/queries/canal-queries";
 import MessageCard from "./MessageCard";
 import { Separator } from "./ui/separator";
 
@@ -10,6 +13,7 @@ interface MessageListProps {
 
 export default function MessageList({ channelId }: MessageListProps) {
   const { data: messages } = usePrivateMessageList(channelId);
+  const { data: canal } = usePrivateCanal();
 
   function isSameMinute(timestamp1: number, timestamp2: number): boolean {
     const date1 = new Date(timestamp1);
@@ -94,7 +98,10 @@ export default function MessageList({ channelId }: MessageListProps) {
                   <Separator className="w-1/3 bg-gray-400" />
                 </div>
               )}
-              <MessageCard messages={group} />
+              <MessageCard
+                channel={canal?.find((c) => c.id == channelId)}
+                messages={group}
+              />
             </div>
           );
         })}

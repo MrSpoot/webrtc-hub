@@ -1,9 +1,10 @@
 import api from "../lib/axios";
+import { Profile } from "./user-service";
 
-export interface PrivateCanal {
+export interface Channel {
   id: string;
   name: string;
-  users: number[];
+  users: Profile[];
 }
 
 export interface Message {
@@ -15,7 +16,7 @@ export interface Message {
 }
 
 //TODO: Make pagination
-export const getPrivateCanals = (): Promise<PrivateCanal[]> => {
+export const getPrivateChannels = (): Promise<Channel[]> => {
   return api
     .get(`/canals?page=0&size=9999`)
     .then((response) => response.data.content)
