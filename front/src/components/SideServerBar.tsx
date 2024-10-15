@@ -1,6 +1,6 @@
 import { useServer } from "@/services/queries/server-queries";
 import { TooltipArrow, TooltipPortal } from "@radix-ui/react-tooltip";
-import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import {
   Tooltip,
@@ -11,10 +11,7 @@ import {
 
 export default function SideServerBar() {
   const { data: servers } = useServer();
-
-  useEffect(() => {
-    console.log(servers);
-  }, [servers]);
+  const navigate = useNavigate();
 
   return (
     <div className="bg-card text-white p-2">
@@ -24,7 +21,10 @@ export default function SideServerBar() {
             <Tooltip delayDuration={0}>
               <TooltipTrigger asChild>
                 {/* Avatar */}
-                <Avatar className="w-12 h-12">
+                <Avatar
+                  className="w-12 h-12"
+                  onClick={() => navigate(`/app/${s.id}`)}
+                >
                   <AvatarImage
                     src="https://github.com/shadcn.png"
                     alt="@shadcn"

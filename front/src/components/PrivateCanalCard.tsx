@@ -30,7 +30,10 @@ export default function PrivateCanalCard({
               </p>
             </>
           ) : (
-            <></>
+            <>
+              <AvatarWithBadge size="xs" />
+              <p className="text-md font-semibold">{canal.name}</p>
+            </>
           )}
         </div>
       </Card>

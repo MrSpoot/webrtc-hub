@@ -1,3 +1,4 @@
+import ServerChannelList from "@/components/ServerChannelList";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BottomBar from "../components/BottomBar";
@@ -23,10 +24,6 @@ export default function AppPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleCanalChange = (id: string) => {
-    navigate(`/app/@me/${id}`);
-  };
-
   return (
     <>
       <div className="flex h-screen w-screen flex-col-reverse overflow-hidden">
@@ -34,7 +31,7 @@ export default function AppPage() {
         <div className="flex h-full overflow-y-hidden">
           <SideServerBar />
           <div className="h-full w-1/5 bg-[#292929]">
-            <PrivateCanalList onCanalSelect={handleCanalChange} />
+            {serverId === "@me" ? <PrivateCanalList /> : <ServerChannelList />}
           </div>
           <div className="flex flex-1 h-full">
             {channelId && <MessageList channelId={channelId} />}
