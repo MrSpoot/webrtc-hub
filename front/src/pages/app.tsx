@@ -7,6 +7,8 @@ import MessageList from "../components/MessageList";
 import PrivateCanalList from "../components/PrivateCanalList";
 import SideServerBar from "../components/SideServerBar";
 import { useUserStore } from "../hooks/use-userStore";
+import ChannelListHeader from "@/components/ChannelListHeader";
+import ServerListHeader from "@/components/ServerListHeader";
 
 export default function AppPage() {
   const { serverId, channelId } = useParams<{
@@ -31,7 +33,14 @@ export default function AppPage() {
         <div className="flex h-full overflow-y-hidden">
           <SideServerBar />
           <div className="h-full w-1/5 bg-[#292929]">
-            {serverId === "@me" ? <PrivateCanalList /> : <ServerChannelList />}
+            {serverId === "@me" ? (
+              <PrivateCanalList />
+            ) : (
+              <>
+                <ChannelListHeader serverId={serverId ?? ""} />
+                <ServerChannelList />
+              </>
+            )}
           </div>
           <div className="flex flex-1 h-full">
             {channelId && <MessageList channelId={channelId} />}

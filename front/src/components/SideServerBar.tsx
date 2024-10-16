@@ -8,13 +8,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import ServerListHeader from "./ServerListHeader";
 
 export default function SideServerBar() {
   const { data: servers } = useServer();
   const navigate = useNavigate();
 
   return (
-    <div className="bg-card text-white p-2">
+    <div className="bg-card text-white p-2 h-full">
       <div className="flex flex-col gap-2">
         {servers?.map((s) => (
           <TooltipProvider key={s.id}>

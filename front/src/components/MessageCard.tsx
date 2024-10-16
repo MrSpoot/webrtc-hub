@@ -12,11 +12,7 @@ interface MessageProps {
 
 export default function MessageCard({ channel, messages }: MessageProps) {
   const { user } = useUserStore();
-  const [profile] = useState(
-    channel
-      ? channel.users.find((u) => u.id == messages[0].senderId)
-      : useProfile(messages[0].senderId).data
-  );
+  const { data: profile } = useProfile(messages[0].senderId);
 
   function userOwnMessage() {
     return user && user.id === profile?.id;
